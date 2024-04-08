@@ -9,14 +9,14 @@
           label-width="100px"
           class="demo-ruleForm"
       >
-        <el-form-item label="新密码" prop="password">
+        <el-form-item label="new password" prop="password">
           <el-input
               v-model="form2.password"
               type="password"
               autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码" prop="checkpassword">
+        <el-form-item label="confirm new password" prop="checkpassword">
           <el-input
               v-model="form.checkpassword"
               type="password"
@@ -24,8 +24,8 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm" style="text-align: center;margin-left: 120px">提交</el-button>
-          <el-button @click="resetForm('form')" style="text-align: center;margin-left: 20px">重置</el-button>
+          <el-button type="primary" @click="submitForm" style="text-align: center;margin-left: 120px">submit</el-button>
+          <el-button @click="resetForm('form')" style="text-align: center;margin-left: 20px">reset</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -43,16 +43,16 @@ export default {
 
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入新密码'))
+        callback(new Error('Please enter a new password.'))
       } else {
         callback()
       }
     }
     const validatePass3 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
+        callback(new Error('Please enter a new password again.'))
       } else if (value !== this.form2.password) {
-        callback(new Error("两次输入密码不匹配"))
+        callback(new Error("The passwords entered twice do not match."))
       } else {
         callback()
       }
@@ -90,7 +90,7 @@ export default {
 
           request.put("/user", this.form2).then(res => {
             if (res.code == '0') {
-              ElMessage.success("密码修改成功,请重新登录")
+              ElMessage.success("Password changed successfully. Please log in again.")
               sessionStorage.removeItem("user")//清空缓存的用户信息
               this.$router.push("/login")//跳转登录界面
             } else {

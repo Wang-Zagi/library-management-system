@@ -1,108 +1,110 @@
 <template>
   <div class="home" style ="padding: 10px">
 
-    <!-- 搜索-->
+    <!-- Search -->
     <div style="margin: 5px 0;">
       <el-form :inline="true" size="small">
-        <el-form-item label="图书编号" >
-          <el-input v-model="isbn" placeholder="请输入图书编号" clearable>
+        <el-form-item label="Book ISBN" >
+          <el-input v-model="isbn" placeholder="Please input book ISBN" clearable>
             <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="图书名称" >
-          <el-input v-model="name" placeholder="请输入图书名称" clearable>
+        <el-form-item label="Book Name" >
+          <el-input v-model="name" placeholder="Please input book name" clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="作者" >
-          <el-input v-model="author" placeholder="请输入作者" clearable>
+        <el-form-item label="Author" >
+          <el-input v-model="author" placeholder="Please input book author" clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
         <el-form-item>
           <el-button type="primary" style="margin-left: 1%" @click="load" size="mini" >
-            <svg-icon iconClass="search"/>查询</el-button>
+            <svg-icon iconClass="search"/>Search</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini"  type="danger" @click="clear">重置</el-button>
+          <el-button size="mini"  type="danger" @click="clear">Clear</el-button>
         </el-form-item>
         <el-form-item style="margin-left: 100px" v-if="user.role === 1">
-          <el-button type="primary" @click = "add">上架</el-button>
-          <el-popconfirm title="确认下架?" @confirm="deleteBatch" v-if="user.role === 1">
+          <el-button type="primary" @click = "add">Add</el-button>
+          <el-popconfirm title="Confirm to delete?" @confirm="deleteBatch" v-if="user.role === 1">
             <template #reference>
-              <el-button type="danger">批量下架</el-button>
+              <el-button type="danger">Delete</el-button>
             </template>
           </el-popconfirm>
         </el-form-item>
         <el-form-item style="float: right" v-if="numOfOutDataBook!==0">
           <el-popconfirm
-              confirm-button-text="查看"
-              cancel-button-text="取消"
+              confirm-button-text="Look up"
+              cancel-button-text="Cancel"
               :icon="InfoFilled"
               icon-color="red"
-              title="您有图书已逾期，请尽快归还"
+              title="Our books are overdue. Please return them as soon as possible."
               @confirm="toLook"
           >
             <template #reference>
-              <el-button  type="warning">逾期通知</el-button>
+              <el-button  type="warning">Overdue notice</el-button>
             </template>
           </el-popconfirm>
         </el-form-item>
       </el-form>
     </div>
 
-    <!-- 数据字段-->
+    <!-- Data Fields -->
     <el-table :data="tableData" stripe :border="true" @selection-change="handleSelectionChange">
       <el-table-column v-if="user.role ===1"
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="isbn" label="图书编号" min-width="10"/>
-      <el-table-column prop="name" label="图书名称" min-width="18"/>
-      <el-table-column prop="price" label="价格" min-width="5"/>
-      <el-table-column prop="author" label="作者" min-width="10"/>
-      <el-table-column prop="publisher" label="出版社" min-width="10"/>
-      <el-table-column prop="publishTime" label="出版时间" min-width="8"/>
-      <el-table-column prop="borrowNum" label="总借阅次数" min-width="8"/>
-      <el-table-column prop="status" label="状态" min-width="6">
+      <el-table-column prop="isbn" label="Book ISBN" min-width="10"/>
+      <el-table-column prop="name" label="Book Name" min-width="18"/>
+      <el-table-column prop="price" label="Price" min-width="5"/>
+      <el-table-column prop="author" label="Author" min-width="10"/>
+      <el-table-column prop="publisher" label="Publisher" min-width="10"/>
+      <el-table-column prop="publishTime" label="Publish Time" min-width="8"/>
+      <el-table-column prop="borrowNum" label="Borrow Times" min-width="8"/>
+      <el-table-column prop="status" label="Status" min-width="6">
         <template v-slot="scope">
-          <el-tag :type="scope.row.status==='在库中'?'success':'warning'">{{scope.row.status}}</el-tag>
+          <el-tag :type="scope.row.status==='in library'?'success':'warning'">{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" min-width="12">
+      <el-table-column fixed="right" label="Operation" min-width="12">
         <template v-slot="scope">
-          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role === 1">编辑</el-button>
-          <el-popconfirm title="确认下架?" @confirm="handleDelete(scope.row.isbn)" v-if="user.role === 1">
+          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role === 1">Handle</el-button>
+          <el-popconfirm title="Confirm to delete?" @confirm="handleDelete(scope.row.isbn)" v-if="user.role === 1">
             <template #reference>
-              <el-button type="danger" size="mini" >下架</el-button>
+              <el-button type="danger" size="mini" >Delete</el-button>
             </template>
           </el-popconfirm>
-          <el-button size="mini" @click ="lend(scope.row.isbn,scope.row.name)" v-if="user.role === 2" :disabled="scope.row.status === '已借出'">借阅</el-button>
+          <el-button size="mini" @click ="lend(scope.row.isbn,scope.row.name)" v-if="user.role === 2" :disabled="scope.row.status === 'borrowed'">Borrow</el-button>
         </template>
       </el-table-column>
     </el-table>
-<!--测试,通知对话框-->
+
+    <!-- Testing, Notification Dialog -->
     <el-dialog
         v-model="dialogVisible3"
         v-if="numOfOutDataBook!==0"
-        title="逾期详情"
+        title="Overdue Details"
         width="50%"
     >
         <el-table :data="outDateBook" style="width: 100%">
-          <el-table-column prop="isbn" label="图书编号" />
-          <el-table-column prop="bookName" label="书名" />
-          <el-table-column prop="lendTime" label="借阅日期" />
-          <el-table-column prop="deadTime" label="截至日期" />
+          <el-table-column prop="isbn" label="Book ISBN" />
+          <el-table-column prop="bookName" label="Book Name" />
+          <el-table-column prop="lendTime" label="Borrowing Date" />
+          <el-table-column prop="deadTime" label="Deadline" />
         </el-table>
 
       <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="dialogVisible3 = false"
-        >确认</el-button>
+        >Confirm</el-button>
       </span>
       </template>
     </el-dialog>
-    <!--    分页-->
+
+    <!-- Pagination -->
     <div style="margin: 10px 0">
       <el-pagination
           v-model:currentPage="currentPage"
@@ -115,25 +117,25 @@
       >
       </el-pagination>
 
-      <el-dialog v-model="dialogVisible" title="上架书籍" width="30%">
+      <el-dialog v-model="dialogVisible" title="Shelve Books" width="30%">
         <el-form :model="book" label-width="120px">
 
-          <el-form-item label="图书编号">
+          <el-form-item label="Book ISBN">
             <el-input style="width: 80%" v-model="book.isbn"></el-input>
           </el-form-item>
-          <el-form-item label="图书名称">
+          <el-form-item label="Book Name">
             <el-input style="width: 80%" v-model="book.name"></el-input>
           </el-form-item>
-          <el-form-item label="价格">
+          <el-form-item label="Price">
             <el-input style="width: 80%" v-model="book.price"></el-input>
           </el-form-item>
-          <el-form-item label="作者">
+          <el-form-item label="Author">
             <el-input style="width: 80%" v-model="book.author"></el-input>
           </el-form-item>
-          <el-form-item label="出版社">
+          <el-form-item label="Publisher">
             <el-input style="width: 80%" v-model="book.publisher"></el-input>
           </el-form-item>
-          <el-form-item label="出版时间">
+          <el-form-item label="Publish Time">
             <div>
               <el-date-picker value-format="YYYY-MM-DD" type="date" style="width: 80%" clearable v-model="book.publishTime" ></el-date-picker>
             </div>
@@ -141,31 +143,31 @@
         </el-form>
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save('上架')">确 定</el-button>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="save('Shelve')">Confirm</el-button>
       </span>
         </template>
       </el-dialog>
 
-      <el-dialog v-model="dialogVisible2" title="编辑书籍信息" width="30%">
+      <el-dialog v-model="dialogVisible2" title="Edit Book Info" width="30%">
         <el-form :model="book" label-width="120px">
 
-          <el-form-item label="图书编号" >
+          <el-form-item label="Book ISBN" >
             <el-input style="width: 80%" v-model="book.isbn" disabled></el-input>
           </el-form-item>
-          <el-form-item label="图书名称">
+          <el-form-item label="Book Name">
             <el-input style="width: 80%" v-model="book.name"></el-input>
           </el-form-item>
-          <el-form-item label="价格">
+          <el-form-item label="Price">
             <el-input style="width: 80%" v-model="book.price"></el-input>
           </el-form-item>
-          <el-form-item label="作者">
+          <el-form-item label="Author">
             <el-input style="width: 80%" v-model="book.author"></el-input>
           </el-form-item>
-          <el-form-item label="出版社">
+          <el-form-item label="Publisher">
             <el-input style="width: 80%" v-model="book.publisher"></el-input>
           </el-form-item>
-          <el-form-item label="出版时间">
+          <el-form-item label="Publish Time">
             <div>
               <el-date-picker value-format="YYYY-MM-DD" type="date" style="width: 80%" clearable v-model="book.publishTime" ></el-date-picker>
             </div>
@@ -173,8 +175,8 @@
         </el-form>
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="save('编辑')">确 定</el-button>
+        <el-button @click="dialogVisible2 = false">Cancel</el-button>
+        <el-button type="primary" @click="save('Edit')">Confirm</el-button>
       </span>
         </template>
       </el-dialog>
@@ -183,7 +185,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import request from "../utils/request";
 import {ElMessage} from "element-plus";
 import moment from "moment";
@@ -253,12 +254,12 @@ export default {
       })
     },
     save(mode){
-      if( mode === "编辑" ){
+      if( mode === "Edit" ){
         request.put("/book",this.book).then(res =>{
           console.log(res)
           if(res.code == '0'){
             ElMessage({
-              message: '编辑书籍信息成功',
+              message: 'Edit successfully',
               type: 'success',
             })
           }
@@ -271,11 +272,11 @@ export default {
       }
       else {
         this.book.borrowNum = 0
-        this.book.status = "在库中"
+        this.book.status = "In library"
         request.post("/book",this.book).then(res =>{
           console.log(res)
           if(res.code == '0'){
-            ElMessage.success('上架书籍成功')
+            ElMessage.success('Add successfully')
           }
           else {
             ElMessage.error(res.msg)
@@ -288,16 +289,16 @@ export default {
     lend(bookId,bookName){
       console.log(this.user)
       if (this.user.phone == null||this.user.phone === ""){
-        ElMessage.error("借阅失败! 请先将个人信息补充完整")
+        ElMessage.error("Borrowing failed! Please complete your personal information first.")
         this.$router.push("/person")//跳转个人信息界面
         return;
       }
       if(this.number ===5){
-        ElMessage.warning("您同时最多只能借阅5本书")
+        ElMessage.warning("You can borrow up to 5 books at a time.")
         return;
       }
       if(this.numOfOutDataBook !==0){
-        ElMessage.warning("在您归还逾期书籍前不能再借阅书籍")
+        ElMessage.warning("You cannot borrow books again until you return the overdue ones.")
         return;
       }
       let lendRecord={}
@@ -313,7 +314,7 @@ export default {
       request.post("/lendRecord",lendRecord).then(res =>{
         console.log(res)
         if(res.code == '0' ){
-          ElMessage.success("借阅成功")
+          ElMessage.success("Borrow successfully")
         }
         else
           ElMessage.error(res.msg)
@@ -324,7 +325,7 @@ export default {
       request.delete("book/" + id ).then(res =>{
         console.log(res)
         if(res.code == '0' ){
-          ElMessage.success("下架成功")
+          ElMessage.success("Delete successfully")
         }
         else
           ElMessage.error(res.msg)
@@ -333,11 +334,9 @@ export default {
     },
     deleteBatch(){
       if (!this.ids.length) {
-        ElMessage.warning("请选择至少一条数据！")
+        ElMessage.warning("Please select at least one item.")
         return
       }
-      //  一个小优化，直接发送这个数组，而不是一个一个的提交下架
-      // request.post("/book/deleteBatch",this.ids).then(res =>{
       request.delete("/book",{
         params:{ids:this.ids},
         paramsSerializer: params => {
@@ -345,7 +344,7 @@ export default {
         }
       }).then(res =>{
         if(res.code == '0'){
-          ElMessage.success("批量下架成功")
+          ElMessage.success("Batch removal successful")
           this.load()
         }
         else {

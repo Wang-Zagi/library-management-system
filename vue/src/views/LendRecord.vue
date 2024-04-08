@@ -4,31 +4,31 @@
     <!-- 搜索-->
     <div style="margin: 5px 0;">
       <el-form inline="true" size="small">
-        <el-form-item label="图书编号" >
-          <el-input v-model="bookId" placeholder="请输入图书编号"  clearable>
+        <el-form-item label="book isbn" >
+          <el-input v-model="bookId" placeholder="Please enter book isbn"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="图书名称" >
-          <el-input v-model="bookName" placeholder="请输入图书名称"  clearable>
+        <el-form-item label="book name" >
+          <el-input v-model="bookName" placeholder="Please enter book name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="读者用户名" v-if="user.role === 1">
-          <el-input v-model="borrowerName" placeholder="请输入读者用户名"  clearable>
+        <el-form-item label="borrower name" v-if="user.role === 1">
+          <el-input v-model="borrowerName" placeholder="Please enter borrower name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
         <el-form-item>
-          <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">查询</el-button>
+          <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">search</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini"  type="danger" @click="clear">重置</el-button>
+          <el-button size="mini"  type="danger" @click="clear">reset</el-button>
         </el-form-item>
         <el-form-item style="margin-left: 100px" v-if="user.role == 1">
-          <el-popconfirm title="确认删除?" @confirm="deleteBatch" v-if="user.role == 1">
+          <el-popconfirm title="confirm delete?" @confirm="deleteBatch" v-if="user.role == 1">
             <template #reference>
-              <el-button type="danger">批量删除</el-button>
+              <el-button type="danger">delete</el-button>
             </template>
           </el-popconfirm>
         </el-form-item>
@@ -40,27 +40,27 @@
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="bookId" label="图书编号"/>
-      <el-table-column prop="bookName" label="图书名称" />
-      <el-table-column prop="borrowerId" label="读者编号" v-if="user.role ==1"/>
-      <el-table-column prop="borrowerName" label="读者用户名" v-if="user.role ==1"/>
-      <el-table-column prop="lendTime" label="借阅时间"/>
-      <el-table-column prop="returnTime" label="归还时间"/>
-      <el-table-column prop="status" label="状态" >
+      <el-table-column prop="bookId" label="book isbn"/>
+      <el-table-column prop="bookName" label="book name" />
+      <el-table-column prop="borrowerId" label="borrower id" v-if="user.role ==1"/>
+      <el-table-column prop="borrowerName" label="borrower name" v-if="user.role ==1"/>
+      <el-table-column prop="lendTime" label="lend time"/>
+      <el-table-column prop="returnTime" label="return time"/>
+      <el-table-column prop="status" label="status" >
         <template v-slot="scope">
-          <el-tag :type="scope.row.status=='已归还'?'success':'warning'">{{scope.row.status}}</el-tag>
+          <el-tag :type="scope.row.status=='returned'?'success':'warning'">{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="user.role === 1" label="操作" width="230px">
+      <el-table-column v-if="user.role === 1" label="operation" width="230px">
         <template v-slot="scope">
-          <el-popconfirm title="确认代还?" @confirm="handleReturn(scope.row)">
+          <el-popconfirm title="confirm return?" @confirm="handleReturn(scope.row)">
             <template #reference>
-              <el-button type="primary" size="mini" :disabled="scope.row.status=='已归还'">代还</el-button>
+              <el-button type="primary" size="mini" :disabled="scope.row.status=='returned'">return</el-button>
             </template>
           </el-popconfirm>
-          <el-popconfirm title="确认删除?" @confirm="handleDelete(scope.row)">
+          <el-popconfirm title="confirm delete?" @confirm="handleDelete(scope.row)">
             <template #reference>
-              <el-button type="danger" size="mini" >删除记录</el-button>
+              <el-button type="danger" size="mini" >delete</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -125,12 +125,12 @@ export default defineComponent({
     },
     handleReturn(row){
       let record = JSON.parse(JSON.stringify(row))
-      record.status = "已归还"
+      record.status = "returned"
       record.returnTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
       request.put("lendRecord",record).then(res =>{
         console.log(res)
         if(res.code == '0' ){
-          ElMessage.success("归还成功")
+          ElMessage.success("return successfully")
         }
         else
           ElMessage.error(res.msg)
@@ -141,7 +141,7 @@ export default defineComponent({
       request.delete("lendRecord/"+row.id).then(res =>{
         console.log(res)
         if(res.code == '0' ){
-          ElMessage.success("删除成功")
+          ElMessage.success("delete successfully")
         }
         else
           ElMessage.error(res.msg)
@@ -150,7 +150,7 @@ export default defineComponent({
     },
     deleteBatch(){
       if(!this.ids.length){
-        ElMessage.warning("请选择至少一条数据！")
+        ElMessage.warning("Please select the data to be deleted")
         return
       }
       console.log(this.ids)
@@ -161,7 +161,7 @@ export default defineComponent({
         }
       }).then(res =>{
         if(res.code == '0'){
-          ElMessage.success("批量删除成功")
+          ElMessage.success("")
           this.load()
         }
         else {
