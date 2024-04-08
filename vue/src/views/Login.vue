@@ -1,27 +1,27 @@
 <template>
 <div  class="login-container"  >
     <el-form ref="form" :model="form"   :rules="rules" class="login-page">
-      <h2 class="title" style="margin-bottom: 20px;text-align: center">图书借阅与管理系统登陆</h2>
+      <h2 class="title" style="margin-bottom: 20px;text-align: center">Library Borrowing and Management System Login</h2>
       <el-form-item prop="username" >
-        <el-input v-model="form.username"  placeholder="用户名" clearable>
+        <el-input v-model="form.username"  placeholder="user name" clearable>
           <template #prefix>
             <el-icon class="el-input__icon"><User /></el-icon>
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="form.password" placeholder="密码" clearable show-password>
+        <el-input v-model="form.password" placeholder="password" clearable show-password>
           <template #prefix>
             <el-icon class="el-input__icon"><Lock /></el-icon>
           </template>
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">登 录</el-button>
+        <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">login</el-button>
       </el-form-item>
-      <el-form-item style=";text-align: center">
+      <el-form-item style="";text-align: center>
 <!--        <el-button type="text" style="font-size: 16px;width: 20%; color: #ee7463" @click="$router.push('/forget')">忘记密码?</el-button>-->
-        <el-button type="text" style="font-size: 16px" @click="$router.push('/register')">没有账号?前往注册</el-button>
+        <el-button type="text" style="font-size: 16px" @click="$router.push('/register')">No account? Go to register.</el-button>
       </el-form-item>
     </el-form>
 </div>
@@ -41,14 +41,14 @@ export default {
         username: [
           {
             required: true,
-            message: '请输入用户名',
+            message: 'Please enter your username.',
             trigger: 'blur',
           }
         ],
         password: [
           {
             required: true,
-            message: '请输入密码',
+            message: 'Please enter your password.',
             trigger: 'blur',
           }
         ]
@@ -63,7 +63,7 @@ export default {
         if (valid) {
           request.post("user/login", this.form).then(res => {
             if (res.code == '0') {
-              ElMessage.success("登录成功")
+              ElMessage.success("Login successful")
               sessionStorage.setItem("user",JSON.stringify(res.data))//缓存用户信息
               this.$router.push("/book")
             } else {
@@ -96,7 +96,7 @@ export default {
   border: 1px solid #eaeaea;
   box-shadow: 0 0 25px #cac6c6;
 }
-/deep/ .el-input__inner{
+.el-input__inner{
   height: 40px;
 }
 </style>

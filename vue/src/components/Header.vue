@@ -14,7 +14,7 @@
       </span>
        <template #dropdown>
          <el-dropdown-menu>
-           <el-dropdown-item @click="exit">退出系统</el-dropdown-item>
+           <el-dropdown-item @click="exit">Exit System</el-dropdown-item>
          </el-dropdown-menu>
        </template>
      </el-dropdown>
@@ -41,7 +41,7 @@ export default {
     exit(){
       sessionStorage.removeItem("user")
       this.$router.push("/login")
-      ElMessage.success("退出系统成功")
+      ElMessage.success("Exit system successfully")
     },
     loadUserInfo(){
       let userStr = sessionStorage.getItem("user")||"{}"

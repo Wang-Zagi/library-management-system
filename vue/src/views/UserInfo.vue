@@ -1,27 +1,27 @@
 <template>
   <div>
     <el-card style="width: 40%; margin-left: 120px; margin-top: 40px" >
-        <h2 style="padding: 30px">个人信息</h2>
+        <h2 style="padding: 30px">Personal Information</h2>
       <el-form :model="user" ref="form" label-width="80px">
-        <el-form-item label="用户名">
+        <el-form-item label="Username">
           <el-input style="width: 80%" v-model="user.username"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
+        <el-form-item label="Gender">
           <div>
-            <el-radio v-model="user.sex" label="男">男</el-radio>
-            <el-radio v-model="user.sex" label="女">女</el-radio>
+            <el-radio v-model="user.sex" label="Male">Male</el-radio>
+            <el-radio v-model="user.sex" label="Female">Female</el-radio>
           </div>
         </el-form-item>
-        <el-form-item label="权限">
-            <span v-if="user.role==1" style="margin:5px">管理员</span>
-            <span v-if="user.role==2" style="margin:5px">读者</span>
+        <el-form-item label="Role">
+            <span v-if="user.role==1" style="margin:5px">Administrator</span>
+            <span v-if="user.role==2" style="margin:5px">Reader</span>
         </el-form-item>
-        <el-form-item label="电话号码">
+        <el-form-item label="Phone Number">
           <el-input style="width: 40%" v-model="user.phone"></el-input>
         </el-form-item>
       </el-form>
       <div style="text-align: center">
-        <el-button type="primary" @click="update">保存</el-button>
+        <el-button type="primary" @click="update">Save</el-button>
       </div>
     </el-card>
   </div>
@@ -52,9 +52,9 @@ export default {
       request.put("/user", this.user).then(res => {
         console.log(res)
         if (res.code == '0') {
-          ElMessage.success("更新成功")
+          ElMessage.success("Update successful")
           sessionStorage.setItem("user", JSON.stringify(this.user))
-          // 触发Layout更新用户信息
+          // Trigger Layout to update user information
           this.$emit("userInfoChange")
         } else {
           ElMessage.error(res.msg)

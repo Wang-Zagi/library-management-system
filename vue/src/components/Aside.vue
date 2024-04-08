@@ -12,55 +12,55 @@
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>
-      <span>图书管理</span>
+      <span>Book Management</span>
     </el-menu-item>
     <el-menu-item index="/book" v-if="user.role == 2">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>
-      <span>图书查询</span>
+      <span>Book Query</span>
     </el-menu-item>
     <el-menu-item index="/bookwithuser" v-if="user.role == 2">
       <el-icon><grid /></el-icon>
-      <span>在借图书</span>
+      <span>Books Borrowed</span>
     </el-menu-item>
     <el-menu-item index="/lendrecord">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconlend-record "></use>
       </svg>
-      <span>借阅记录</span>
+      <span>Borrowing Records</span>
     </el-menu-item>
     <el-menu-item index="/user" v-if="user.role == 1">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconreader "></use>
       </svg>
-      <span>读者管理</span>
+      <span>Reader Management</span>
     </el-menu-item>
     <el-sub-menu index="2" text-color="#fff">
       <template #title>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-mingpian "></use>
         </svg>
-        <span>个人信息</span>
+        <span>Personal Information</span>
       </template>
       <el-menu-item index="/person" style="font-color: white">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-a-bianji1 "></use>
         </svg>
-        <span>修改个人信息</span>
+        <span>Edit Personal Information</span>
       </el-menu-item>
       <el-menu-item index="/password">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-mima "></use>
         </svg>
-        <span>修改密码</span>
+        <span>Change Password</span>
       </el-menu-item>
     </el-sub-menu>
     <el-menu-item index="/dashboard" v-if="user.role == 1">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icondashboard "></use>
       </svg>
-      <span>数据统计</span>
+      <span>Data Statistics</span>
     </el-menu-item>
   </el-menu>
 

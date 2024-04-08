@@ -14,7 +14,7 @@
       </el-col>
     </el-row>
     <div id="myTimer" style="margin-left: 15px;font-weight: 550;"></div>
-    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <!-- Prepare a DOM element with a size (width and height) for ECharts -->
     <div id="main" style="margin-left: 5px"></div>
   </div>
 </template>
@@ -29,10 +29,10 @@ export default {
   data() {
     return {
       cards: [
-        { title: '总借阅', data: 100, icon: '#iconlend-record-pro' },
-        { title: '总访问', data: 100, icon: '#iconvisit'   },
-        { title: '图书数', data: 100, icon: '#iconbook-pro' },
-        { title: '用户数', data: 1000, icon: '#iconpopulation' }
+        { title: 'Total borrowing', data: 100, icon: '#iconlend-record-pro' },
+        { title: 'Total visits', data: 100, icon: '#iconvisit'   },
+        { title: 'Number of books', data: 100, icon: '#iconbook-pro' },
+        { title: 'Number of users', data: 1000, icon: '#iconpopulation' }
       ],
       data:{}
     }
@@ -63,18 +63,18 @@ export default {
       }
 
 
-      // 基于准备好的dom，初始化echarts实例
+      // Initialize ECharts instance based on the prepared DOM
       var myChart = echarts.init(document.getElementById('main'))
     console.log(this.cards[0].data)
-      // 绘制图表
+      // Draw the chart
       myChart.setOption({
         title: {
-          text: '统计'
+          text: 'Statistics'
         },
         tooltip: {
           trigger: 'axis'
           // axisPointer: {
-          //   type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          //   type: 'shadow' // Default is a straight line, optional: 'line' | 'shadow'
           // }
         },
         grid: {
