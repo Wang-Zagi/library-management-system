@@ -19,8 +19,7 @@
       <el-form-item>
         <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">login</el-button>
       </el-form-item>
-      <el-form-item style="";text-align: center>
-<!--        <el-button type="text" style="font-size: 16px;width: 20%; color: #ee7463" @click="$router.push('/forget')">忘记密码?</el-button>-->
+      <el-form-item style="" text-align: center>
         <el-button type="text" style="font-size: 16px" @click="$router.push('/register')">No account? Go to register.</el-button>
       </el-form-item>
     </el-form>
