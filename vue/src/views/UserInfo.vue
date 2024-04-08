@@ -16,7 +16,7 @@
             <span v-if="user.role==1" style="margin:5px">Administrator</span>
             <span v-if="user.role==2" style="margin:5px">Reader</span>
         </el-form-item>
-        <el-form-item label="Phone Number">
+        <el-form-item label="Phone">
           <el-input style="width: 40%" v-model="user.phone"></el-input>
         </el-form-item>
       </el-form>

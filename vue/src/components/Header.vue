@@ -14,7 +14,7 @@
       </span>
        <template #dropdown>
          <el-dropdown-menu>
-           <el-dropdown-item @click="exit">Exit System</el-dropdown-item>
+           <el-dropdown-item @click="exit">Logout</el-dropdown-item>
          </el-dropdown-menu>
        </template>
      </el-dropdown>

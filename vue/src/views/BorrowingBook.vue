@@ -87,7 +87,7 @@ export default {
           bookName: this.bookName,
           borrowerName: this.borrowerName,
           borrowerId: this.user.id,
-          status: "Borrowing",
+          status: "on loan",
         }
       }).then(res =>{
         console.log(res)

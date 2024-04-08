@@ -2,7 +2,7 @@
 <div>
 
   <el-menu
-      style="width: 200px; min-height: calc(100vh - 50px);"
+      style="width: 250px; min-height: calc(100vh - 50px);"
       :default-active="$route.path"
       class="el-menu-vertical-demo"
       router
@@ -47,7 +47,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-a-bianji1 "></use>
         </svg>
-        <span>Edit Personal Information</span>
+        <span>Edit Information</span>
       </el-menu-item>
       <el-menu-item index="/password">
         <svg class="icon" aria-hidden="true">

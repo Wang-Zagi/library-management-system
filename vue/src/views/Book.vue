@@ -26,11 +26,11 @@
         <el-form-item>
           <el-button size="mini"  type="danger" @click="clear">Clear</el-button>
         </el-form-item>
-        <el-form-item style="margin-left: 100px" v-if="user.role === 1">
+        <el-form-item style="margin-left: 20px" v-if="user.role === 1">
           <el-button type="primary" @click = "add">Add</el-button>
           <el-popconfirm title="Confirm to delete?" @confirm="deleteBatch" v-if="user.role === 1">
             <template #reference>
-              <el-button type="danger">Delete</el-button>
+              <el-button type="danger">Batch delete</el-button>
             </template>
           </el-popconfirm>
         </el-form-item>
@@ -58,9 +58,9 @@
                        width="55">
       </el-table-column>
       <el-table-column prop="isbn" label="Book ISBN" min-width="10"/>
-      <el-table-column prop="name" label="Book Name" min-width="18"/>
-      <el-table-column prop="price" label="Price" min-width="5"/>
-      <el-table-column prop="author" label="Author" min-width="10"/>
+      <el-table-column prop="name" label="Book Name" min-width="14"/>
+      <el-table-column prop="price" label="Price" min-width="4"/>
+      <el-table-column prop="author" label="Author" min-width="8"/>
       <el-table-column prop="publisher" label="Publisher" min-width="10"/>
       <el-table-column prop="publishTime" label="Publish Time" min-width="8"/>
       <el-table-column prop="borrowNum" label="Borrow Times" min-width="8"/>
@@ -71,7 +71,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="Operation" min-width="12">
         <template v-slot="scope">
-          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role === 1">Handle</el-button>
+          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role === 1">Edit</el-button>
           <el-popconfirm title="Confirm to delete?" @confirm="handleDelete(scope.row.isbn)" v-if="user.role === 1">
             <template #reference>
               <el-button type="danger" size="mini" >Delete</el-button>
@@ -230,7 +230,7 @@ export default {
               pageNum: 1,
               pageSize: this.total,
               borrowerId: this.user.id,
-              status:"借阅中"
+              status:"on loan"
             }
           }).then(res =>{
             console.log(res)
@@ -310,7 +310,7 @@ export default {
       lendRecord.lendTime = moment(nowTime).format("yyyy-MM-DD HH:mm:ss");
       nowTime.setDate(nowTime.getDate()+30);
       lendRecord.deadTime = moment(nowTime).format("yyyy-MM-DD HH:mm:ss");
-      lendRecord.status="借阅中"
+      lendRecord.status="on loan"
       request.post("/lendRecord",lendRecord).then(res =>{
         console.log(res)
         if(res.code == '0' ){

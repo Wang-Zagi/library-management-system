@@ -1,7 +1,7 @@
 <template>
 <div  class="login-container"  >
     <el-form ref="form" :model="form"   :rules="rules" class="login-page">
-      <h2 class="title" style="margin-bottom: 20px;text-align: center">Library Borrowing and Management System Login</h2>
+      <h2 class="title" style="margin-bottom: 20px;text-align: center">Library Management System Login</h2>
       <el-form-item prop="username" >
         <el-input v-model="form.username"  placeholder="user name" clearable>
           <template #prefix>
@@ -88,7 +88,7 @@ export default {
 }
 .login-page {
   border-radius: 5px;
-  margin: 300px auto;
+  margin: 200px auto;
   width: 420px;
   padding: 35px 35px 15px;
   background: #fff;

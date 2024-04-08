@@ -6,7 +6,7 @@
           :model="form"
           status-icon
           :rules="rules"
-          label-width="100px"
+          label-width="180px"
           class="demo-ruleForm"
       >
         <el-form-item label="new password" prop="password">

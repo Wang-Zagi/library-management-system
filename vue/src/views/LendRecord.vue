@@ -25,10 +25,10 @@
         <el-form-item>
           <el-button size="mini"  type="danger" @click="clear">reset</el-button>
         </el-form-item>
-        <el-form-item style="margin-left: 100px" v-if="user.role == 1">
+        <el-form-item style="margin-left: 30px" v-if="user.role == 1">
           <el-popconfirm title="confirm delete?" @confirm="deleteBatch" v-if="user.role == 1">
             <template #reference>
-              <el-button type="danger">delete</el-button>
+              <el-button type="danger">Batch delete</el-button>
             </template>
           </el-popconfirm>
         </el-form-item>
@@ -44,7 +44,7 @@
       <el-table-column prop="bookName" label="book name" />
       <el-table-column prop="borrowerId" label="borrower id" v-if="user.role ==1"/>
       <el-table-column prop="borrowerName" label="borrower name" v-if="user.role ==1"/>
-      <el-table-column prop="lendTime" label="lend time"/>
+      <el-table-column prop="lendTime" label="borrow time"/>
       <el-table-column prop="returnTime" label="return time"/>
       <el-table-column prop="status" label="status" >
         <template v-slot="scope">

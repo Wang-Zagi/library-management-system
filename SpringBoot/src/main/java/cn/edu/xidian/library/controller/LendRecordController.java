@@ -51,7 +51,7 @@ public class LendRecordController {
     public Result<?> lend(@RequestBody LendRecord lendRecord){
         lendRecordMapper.insert(lendRecord);
         Book book=bookMapper.selectById(lendRecord.getBookId());
-        book.setStatus("已借出");
+        book.setStatus("on loan");
         book.setBorrowNum(book.getBorrowNum()+1);
         bookMapper.updateById(book);
         return Result.success();
@@ -61,10 +61,10 @@ public class LendRecordController {
     public  Result<?> update(@RequestBody LendRecord lendRecord){
         LendRecord oldLendRecord=lendRecordMapper.selectById(lendRecord.getId());
         lendRecordMapper.updateById(lendRecord);
-        if(oldLendRecord.getStatus().equals("借阅中")&&lendRecord.getStatus().equals("已归还")){
+        if(oldLendRecord.getStatus().equals("on loan")&&lendRecord.getStatus().equals("returned")){
             Book book=bookMapper.selectById(lendRecord.getBookId());
             System.out.println(book);
-            book.setStatus("在库中");
+            book.setStatus("in library");
             bookMapper.updateById(book);
         }
         return Result.success();
@@ -72,7 +72,7 @@ public class LendRecordController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id){
         LendRecord record=lendRecordMapper.selectById(id);
-        if(record.getStatus().equals("借阅中"))
+        if(record.getStatus().equals("on loan"))
             return Result.error("-1","该记录未归还，无法删除");
         lendRecordMapper.deleteById(id);
         return Result.success();
@@ -82,7 +82,7 @@ public class LendRecordController {
     public Result<?> deleteBatch(@RequestParam List<Long> ids){
         for (Long id:ids){
             LendRecord record=lendRecordMapper.selectById(id);
-            if(record.getStatus().equals("借阅中"))
+            if(record.getStatus().equals("on loan"))
                 return Result.error("-1","该记录未归还，无法删除");
         }
         lendRecordMapper.deleteBatchIds(ids);

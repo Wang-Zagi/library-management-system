@@ -96,7 +96,7 @@ public class UserController {
     public Result<?> delete(@PathVariable Long id){
         LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(LendRecord::getBorrowerId,id)
-                .eq(LendRecord::getStatus,"借阅中");
+                .eq(LendRecord::getStatus,"on loan");
         if (lendRecordMapper.selectOne(wrapper) != null)
             return Result.error("-1","用户有书籍正在借阅中，无法删除");
         userMapper.deleteById(id);
@@ -109,7 +109,7 @@ public class UserController {
         for (Integer id:ids){
             LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(LendRecord::getBorrowerId,id)
-                    .eq(LendRecord::getStatus,"借阅中");
+                    .eq(LendRecord::getStatus,"on loan");
             if (lendRecordMapper.selectOne(wrapper) != null)
                 return Result.error("-1","用户有书籍正在借阅中，无法删除");
         }

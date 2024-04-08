@@ -58,7 +58,7 @@ public class BookController {
     public Result<?> delete(@PathVariable String id){
         LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(LendRecord::getBookId,id)
-                .eq(LendRecord::getStatus,"借阅中");
+                .eq(LendRecord::getStatus,"on loan");
         if (lendRecordMapper.selectOne(wrapper) != null)
             return Result.error("-1","书籍在借阅中,无法下架");
         bookMapper.deleteById(id);
@@ -70,7 +70,7 @@ public class BookController {
         for (String id:ids){
             LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(LendRecord::getBookId,id)
-                    .eq(LendRecord::getStatus,"借阅中");
+                    .eq(LendRecord::getStatus,"on loan");
             if (lendRecordMapper.selectOne(wrapper) != null)
                 return Result.error("-1","书籍在借阅中,无法下架");
         }
