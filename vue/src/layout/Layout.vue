@@ -1,11 +1,11 @@
 <template>
-  <Header/>
+  <Header ref="header"/>
   <!--    主体-->
   <div style="display: flex">
     <!--      侧边栏-->
     <Aside/>
     <!--      内容区域-->
-    <router-view style="flex: 1"/>
+    <router-view v-on:userInfoChange="handleInfoChange" style="flex:1"/>
   </div>
 </template>
 
@@ -18,6 +18,12 @@ export default {
   components:{
     Header,
     Aside
+  },
+  methods:{
+    handleInfoChange(){
+      console.log("handleInfoChange")
+      this.$refs.header.loadUserInfo()
+    }
   }
 }
 </script>

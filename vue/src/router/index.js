@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import Layout from "../layout/Layout";
 
 const routes = [
@@ -21,7 +21,7 @@ const routes = [
       {
         path: 'person',
         name: 'Person',
-        component: () => import("@/views/Person")
+        component: () => import("@/views/UserInfo")
       },
       {
         path: 'password',
@@ -41,7 +41,7 @@ const routes = [
       {
         path: 'bookwithuser',
         name: 'BookWithUser',
-        component: () => import("@/views/BookWithUser")
+        component: () => import("@/views/BorrowingBook.vue")
       }
     ]
   },

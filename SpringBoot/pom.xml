@@ -8,10 +8,10 @@
 		<version>2.6.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>wzunjh</artifactId>
+	<groupId>cn.edu.xidian</groupId>
+	<artifactId>library-management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>wzunjh</name>
+	<name>library-management</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -24,13 +24,7 @@
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<version>3.0.0</version>
+			<version>2.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -73,19 +67,6 @@
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>4.2.1</version>
-		</dependency>
-
-<!--		阿里云短信服务-->
-		<dependency>
-			<groupId>com.aliyun</groupId>
-			<artifactId>aliyun-java-sdk-core</artifactId>
-			<version>4.6.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.aliyun</groupId>
-			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
-			<version>2.2.1</version>
 		</dependency>
 	</dependencies>
 

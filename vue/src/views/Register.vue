@@ -34,12 +34,6 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item>
-        <div style="display: flex">
-          <el-input  v-model="form.validCode" style="width: 45%;" placeholder="请输入验证码"></el-input>
-          <ValidCode @input="createValidCode" style="width: 50%"/>
-        </div>
-      </el-form-item>
       <el-form-item >
         <el-button type="primary" style=" width: 100%;font-size: 20px"  @click="register">注 册</el-button>
       </el-form-item>
@@ -52,12 +46,8 @@
 <script>
 import request from "../utils/request";
 import {ElMessage} from "element-plus";
-import ValidCode from "../components/Validate";
 export default {
   name: "Login",
-  components:{
-    ValidCode
-  },
   data(){
     return{
       form:{},
@@ -102,20 +92,9 @@ export default {
     },
 
   methods:{
-    createValidCode(data){
-      this.validCode =data
-    },
     register(){
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (!this.form.validCode) {
-            ElMessage.error("请填写验证码")
-            return
-          }
-          if(this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()) {
-            ElMessage.error("验证码错误")
-            return
-          }
           if(this.form.password != this.form.confirm)
           {
             ElMessage.error("两次密码输入不一致")
@@ -127,7 +106,7 @@ export default {
             return
           }
           request.post("user/register",this.form).then(res=>{
-            if(res.code == 0)
+            if(res.code == '0')
             {
               ElMessage.success("注册成功")
               this.$router.push("/login")
@@ -149,7 +128,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: url('../img/bg2.svg');
+  background: url('../img/bg.svg');
   background-size: contain;
 }
 .login-page {

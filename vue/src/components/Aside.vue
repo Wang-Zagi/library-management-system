@@ -1,21 +1,40 @@
 <template>
 <div>
 
-
   <el-menu
       style="width: 200px; min-height: calc(100vh - 50px);"
-      :default-active="path"
+      :default-active="$route.path"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       router
       background-color="#30333c" text-color="#fff"
   >
-    <el-menu-item index="/dashboard" >
+    <el-menu-item index="/book" v-if="user.role == 1" >
       <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icondashboard "></use>
+        <use xlink:href="#iconbook "></use>
       </svg>
-      <span>数据可视化</span>
+      <span>图书管理</span>
+    </el-menu-item>
+    <el-menu-item index="/book" v-if="user.role == 2">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#iconbook "></use>
+      </svg>
+      <span>图书查询</span>
+    </el-menu-item>
+    <el-menu-item index="/bookwithuser" v-if="user.role == 2">
+      <el-icon><grid /></el-icon>
+      <span>在借图书</span>
+    </el-menu-item>
+    <el-menu-item index="/lendrecord">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#iconlend-record "></use>
+      </svg>
+      <span>借阅记录</span>
+    </el-menu-item>
+    <el-menu-item index="/user" v-if="user.role == 1">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#iconreader "></use>
+      </svg>
+      <span>读者管理</span>
     </el-menu-item>
     <el-sub-menu index="2" text-color="#fff">
       <template #title>
@@ -37,39 +56,11 @@
         <span>修改密码</span>
       </el-menu-item>
     </el-sub-menu>
-    <el-menu-item index="/user" v-if="user.role == 1">
+    <el-menu-item index="/dashboard" v-if="user.role == 1">
       <svg class="icon" aria-hidden="true">
-        <use xlink:href="#iconreader "></use>
+        <use xlink:href="#icondashboard "></use>
       </svg>
-      <span>读者管理</span>
-    </el-menu-item>
-    <el-menu-item index="/book" v-if="user.role == 1" >
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#iconbook "></use>
-      </svg>
-      <span>书籍管理</span>
-    </el-menu-item>
-    <el-menu-item index="/book" v-if="user.role == 2">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#iconbook "></use>
-      </svg>
-      <span>图书查询</span>
-    </el-menu-item>
-    <el-menu-item index="/lendrecord" v-if="user.role == 1">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#iconlend-record "></use>
-      </svg>
-      <span>借阅记录</span>
-    </el-menu-item>
-    <el-menu-item index="/lendrecord" v-if="user.role == 2">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#iconlend-record"></use>
-      </svg>
-      <span>借阅信息</span>
-    </el-menu-item>
-    <el-menu-item index="/bookwithuser" >
-      <el-icon><grid /></el-icon>
-      <span>借阅状态</span>
+      <span>数据统计</span>
     </el-menu-item>
   </el-menu>
 
@@ -90,7 +81,6 @@ export default {
   data(){
     return {
       user:{},
-      path: this.$route.path
     }
   }
 }

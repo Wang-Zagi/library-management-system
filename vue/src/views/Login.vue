@@ -17,17 +17,11 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <div style="display: flex">
-          <el-input  v-model="form.validCode" style="width: 45%;" placeholder="请输入验证码"></el-input>
-          <ValidCode @input="createValidCode" style="width: 50%"/>
-        </div>
-      </el-form-item>
-      <el-form-item>
         <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">登 录</el-button>
       </el-form-item>
-      <el-form-item>
-        <el-button type="text" style="font-size: 16px;width: 20%; color: #ee7463" @click="$router.push('/forget')">忘记密码?</el-button>
-        <el-button type="text" style="font-size: 16px;margin-left: 139px" @click="$router.push('/register')">没有账号?前往注册</el-button>
+      <el-form-item style=";text-align: center">
+<!--        <el-button type="text" style="font-size: 16px;width: 20%; color: #ee7463" @click="$router.push('/forget')">忘记密码?</el-button>-->
+        <el-button type="text" style="font-size: 16px" @click="$router.push('/register')">没有账号?前往注册</el-button>
       </el-form-item>
     </el-form>
 </div>
@@ -37,16 +31,11 @@
 <script>
 import request from "../utils/request";
 import {ElMessage} from "element-plus";
-import ValidCode from "../components/Validate";
 
 export default {
   name: "Login",
-  components:{
-    ValidCode
-  },
   data() {
     return {
-      validCode: '',//通过valicode获取的验证码
       form: {},
       rules: {
         username: [
@@ -69,33 +58,20 @@ export default {
     }
   },
   methods: {
-    createValidCode(data){
-      this.validCode = data
-    },
     login(){
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (!this.form.validCode) {
-            ElMessage.error("请填写验证码")
-            return
-          }
-          if(this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()) {
-            ElMessage.error("验证码错误")
-            return
-          }
-
           request.post("user/login", this.form).then(res => {
-            if (res.code == 0) {
+            if (res.code == '0') {
               ElMessage.success("登录成功")
               sessionStorage.setItem("user",JSON.stringify(res.data))//缓存用户信息
-              this.$router.push("/dashboard")
+              this.$router.push("/book")
             } else {
               ElMessage.error(res.msg)
             }
           })
         }
       })
-
     }
   }
 }
@@ -107,7 +83,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100vh;
-  background: url('../img/bg2.svg');
+  background: url('../img/bg.svg');
   background-size: contain;
   overflow: hidden;
 }

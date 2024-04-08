@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       cards: [
-        { title: '已借阅', data: 100, icon: '#iconlend-record-pro' },
+        { title: '总借阅', data: 100, icon: '#iconlend-record-pro' },
         { title: '总访问', data: 100, icon: '#iconvisit'   },
         { title: '图书数', data: 100, icon: '#iconbook-pro' },
         { title: '用户数', data: 1000, icon: '#iconpopulation' }
@@ -48,7 +48,7 @@ export default {
     this.circleTimer()
 
     request.get("/dashboard").then(res=>{
-      if(res.code == 0)
+      if(res.code == '0')
       {
 
         this.cards[0].data = res.data.lendRecordCount

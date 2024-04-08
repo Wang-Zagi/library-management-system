@@ -9,15 +9,6 @@
           label-width="100px"
           class="demo-ruleForm"
       >
-        <el-form-item label="验证码" prop="code">
-          <el-input
-              v-model="form2.code"
-              type="code"
-              autocomplete="off"
-              style="width: 150px"
-          ></el-input>
-          <el-button type="success" plain  style="margin-left: 20px" @click="getcode" :disabled="isDisabled">{{buttonName}}</el-button>
-        </el-form-item>
         <el-form-item label="新密码" prop="password">
           <el-input
               v-model="form2.password"
@@ -68,17 +59,12 @@ export default {
     }
     return {
 
-      buttonName: "获取短信验证码",
       isDisabled: false,
       time: 60,
-
-      phone:'',
       form: {
         checkpassword: '',
       },
       form2:{
-        phone:'',
-        code: '',
         password:'',
         id:0
       },
@@ -90,55 +76,20 @@ export default {
   },
   created() {
     let userJson = sessionStorage.getItem("user")
-    if(!userJson)
-    {
+    if(!userJson) {
       router.push("/login")
+      return
     }
-    let user = JSON.parse(sessionStorage.getItem("user"))
-    this.phone= user.phone
-    this.form2.id = user.id
-    this.form2.phone = user.phone
+    this.form2.id = JSON.parse(userJson).id
   },
   methods: {
 
-    getcode(){
-
-      if (this.phone == null){
-        ElMessage.error("获取失败! 请先将个人信息补充完整")
-        this.$router.push("/person")//跳转个人信息界面
-        return;
-      }
-
-      let me = this;
-      me.isDisabled = true;
-      let interval = window.setInterval(function() {
-        me.buttonName = '（' + me.time + '秒）后重新发送';
-        --me.time;
-        if(me.time < 0) {
-          me.buttonName = "重新发送";
-          me.time = 60;
-          me.isDisabled = false;
-          window.clearInterval(interval);
-        }
-      }, 1000);
-      request.get("user/getcode",{
-        params:{
-          phone:this.phone
-        }
-      }).then(res=>{
-        if (res.code == 0) {
-          ElMessage.success("验证码发送成功")
-        } else {
-          ElMessage.error(res.msg)
-        }
-      })
-    },
     submitForm() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
 
           request.put("/user", this.form2).then(res => {
-            if (res.code == 0) {
+            if (res.code == '0') {
               ElMessage.success("密码修改成功,请重新登录")
               sessionStorage.removeItem("user")//清空缓存的用户信息
               this.$router.push("/login")//跳转登录界面

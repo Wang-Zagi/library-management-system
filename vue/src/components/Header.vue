@@ -1,13 +1,14 @@
 <template>
  <div style="height: 50px; line-height:50px; border-bottom: 1px solid #ccc; display: flex">
-   <div style="width: 200px; padding-left:30px; font-weight: bold; color:dodgerblue">
+   <div style="width: 600px; padding-left:30px; font-weight: bold; color:dodgerblue">
      <img :src="imgUrl" class="icon" >
-     图书馆管理系统</div>
+     <span style="font-size:30px">Library Management System</span>
+   </div>
    <div style="flex: 1"></div>
    <div style="width: 100px">
      <el-dropdown>
       <span class="el-dropdown-link">
-        {{user.nickName}} <el-icon class="el-icon--right">
+        {{user.username}} <el-icon class="el-icon--right">
           <arrow-down />
           </el-icon>
       </span>
@@ -34,14 +35,17 @@ export default {
     }
   },
   created(){
-    let userStr = sessionStorage.getItem("user")||"{}"
-    this.user = JSON.parse(userStr)
+    this.loadUserInfo()
   },
   methods:{
     exit(){
       sessionStorage.removeItem("user")
       this.$router.push("/login")
       ElMessage.success("退出系统成功")
+    },
+    loadUserInfo(){
+      let userStr = sessionStorage.getItem("user")||"{}"
+      this.user = JSON.parse(userStr)
     }
   }
 
