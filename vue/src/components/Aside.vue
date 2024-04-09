@@ -14,7 +14,7 @@
       </svg>
       <span>Book Management</span>
     </el-menu-item>
-    <el-menu-item index="/book" v-if="user.role == 2">
+    <el-menu-item index="/book" v-if="user.role != 1">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>
@@ -24,7 +24,7 @@
       <el-icon><grid /></el-icon>
       <span>Books Borrowed</span>
     </el-menu-item>
-    <el-menu-item index="/lendrecord">
+    <el-menu-item index="/lendrecord" v-if="user.role !=0">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconlend-record "></use>
       </svg>
@@ -36,7 +36,7 @@
       </svg>
       <span>Reader Management</span>
     </el-menu-item>
-    <el-sub-menu index="2" text-color="#fff">
+    <el-sub-menu index="2" text-color="#fff" v-if="user.role!=0">
       <template #title>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-mingpian "></use>
@@ -75,12 +75,14 @@ export default {
   name: "Aside",
   components:{},
   created(){
-    let userStr = sessionStorage.getItem("user") ||"{}"
-    this.user = JSON.parse(userStr)
+    let userStr = sessionStorage.getItem("user")
+    if(userStr) this.user = JSON.parse(userStr)
   },
   data(){
     return {
-      user:{},
+      user:{
+        role:0
+      },
     }
   }
 }

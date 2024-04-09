@@ -1,6 +1,9 @@
 <template>
   <div class="home" style ="padding: 10px">
-
+    <div style="max-width: 800px;margin: 5px auto 15px" v-if="user.role === 0">
+      <el-alert center="true" type="warning" :closable="false" show-icon="true" style="font-size: 18px"
+                title="If you want to borrow books, Please login"/>
+    </div>
     <!-- Search -->
     <div style="margin: 5px 0;">
       <el-form :inline="true" size="small">
@@ -199,11 +202,8 @@ export default {
   },
   created(){
     let userJson = sessionStorage.getItem("user")
-    if(!userJson) {
-      router.push("/login")
-      return
-    }
-    this.user = JSON.parse(userJson)
+    if(userJson)
+      this.user = JSON.parse(userJson)
     this.load()
   },
   name: 'Book',
@@ -272,7 +272,7 @@ export default {
       }
       else {
         this.book.borrowNum = 0
-        this.book.status = "In library"
+        this.book.status = "in library"
         request.post("/book",this.book).then(res =>{
           console.log(res)
           if(res.code == '0'){
@@ -383,7 +383,7 @@ export default {
       currentPage:1,
       pageSize: 10,
       tableData: [],
-      user:{},
+      user:{role:0},
       number:0,
       bookList:[],
       outDateBook:[],
