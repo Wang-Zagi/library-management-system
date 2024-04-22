@@ -60,7 +60,7 @@ public class BookController {
         wrapper.eq(LendRecord::getBookId,id)
                 .eq(LendRecord::getStatus,"on loan");
         if (lendRecordMapper.selectOne(wrapper) != null)
-            return Result.error("-1","书籍在借阅中,无法下架");
+            return Result.error("-1","书籍在借阅中,无法下架"); //TODO 翻译成英文
         bookMapper.deleteById(id);
         return Result.success();
     }
@@ -72,7 +72,7 @@ public class BookController {
             wrapper.eq(LendRecord::getBookId,id)
                     .eq(LendRecord::getStatus,"on loan");
             if (lendRecordMapper.selectOne(wrapper) != null)
-                return Result.error("-1","书籍在借阅中,无法下架");
+                return Result.error("-1","书籍在借阅中,无法下架"); //TODO 翻译成英文
         }
         bookMapper.deleteBatchIds(ids);
         return Result.success();

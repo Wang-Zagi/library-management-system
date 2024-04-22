@@ -4,17 +4,17 @@
     <!-- 搜索-->
     <div style="margin: 5px 0;">
       <el-form inline="true" size="small">
-        <el-form-item label="book isbn" >
+        <el-form-item label="Book Isbn" >
           <el-input v-model="bookId" placeholder="Please enter book isbn"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="book name" >
+        <el-form-item label="Book Name" >
           <el-input v-model="bookName" placeholder="Please enter book name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="borrower name" v-if="user.role === 1">
+        <el-form-item label="Borrower Name" v-if="user.role === 1">
           <el-input v-model="borrowerName" placeholder="Please enter borrower name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
@@ -40,13 +40,13 @@
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="bookId" label="book isbn"/>
-      <el-table-column prop="bookName" label="book name" />
-      <el-table-column prop="borrowerId" label="borrower id" v-if="user.role ==1"/>
-      <el-table-column prop="borrowerName" label="borrower name" v-if="user.role ==1"/>
-      <el-table-column prop="lendTime" label="borrow time"/>
-      <el-table-column prop="returnTime" label="return time"/>
-      <el-table-column prop="status" label="status" >
+      <el-table-column prop="bookId" label="Book Isbn"/>
+      <el-table-column prop="bookName" label="Book Name" />
+      <el-table-column prop="borrowerId" label="Borrower Id" v-if="user.role ==1"/>
+      <el-table-column prop="borrowerName" label="Borrower Name" v-if="user.role ==1"/>
+      <el-table-column prop="lendTime" label="Borrow Time"/>
+      <el-table-column prop="returnTime" label="Return Time"/>
+      <el-table-column prop="status" label="Status" >
         <template v-slot="scope">
           <el-tag :type="scope.row.status=='returned'?'success':'warning'">{{scope.row.status}}</el-tag>
         </template>

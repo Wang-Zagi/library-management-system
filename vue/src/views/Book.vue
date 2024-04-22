@@ -61,10 +61,10 @@
                        width="55">
       </el-table-column>
       <el-table-column prop="isbn" label="Book ISBN" min-width="10"/>
-      <el-table-column prop="name" label="Book Name" min-width="14"/>
+      <el-table-column prop="name" label="Book Name" min-width="16"/>
       <el-table-column prop="price" label="Price" min-width="4"/>
-      <el-table-column prop="author" label="Author" min-width="8"/>
-      <el-table-column prop="publisher" label="Publisher" min-width="10"/>
+      <el-table-column prop="author" label="Author" min-width="10"/>
+      <el-table-column prop="publisher" label="Publisher" min-width="6"/>
       <el-table-column prop="publishTime" label="Publish Time" min-width="8"/>
       <el-table-column prop="borrowNum" label="Borrow Times" min-width="8"/>
       <el-table-column prop="status" label="Status" min-width="6">

@@ -37,7 +37,7 @@ CREATE TABLE `book` (
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者',
   `publisher` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '出版社',
   `publish_time` date DEFAULT NULL COMMENT '出版时间',
-  `status` char(3) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
   `borrow_num` int NOT NULL DEFAULT '0' COMMENT '此书被借阅次数',
   PRIMARY KEY (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -49,7 +49,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES ('ISBN-20243880100','图书管理系统',188.00,'聂家辉','温州大学出版社','2022-08-10','在库中',0),('ISBN-20243880106','一万个为什么',16.00,'丁奕中','温州大学出版社','2022-12-02','在库中',0),('ISBN-20243880109','格林童话',20.00,'张超祥','温州大学出版社','2022-12-05','在库中',0),('ISBN-20243880114','计算机操作系统',32.00,'凌浩晨','温州大学出版社','2022-12-03','在库中',0),('ISBN-20243880115','十万个为什么',20.00,'苏格与','温州大学出版社','2022-12-05','在库中',0),('ISBN-20243880118','伊索寓言',25.00,'沈益威','温州大学出版社','2022-12-04','在库中',0),('ISBN-20243880119','五万个为什么',22.00,'聂家辉','温州大学出版社','2022-12-02','在库中',0),('ISBN-20243880128','和另一个自己谈谈心',12.00,'武志红','中国友谊出版公司','2021-01-01','在库中',0),('ISBN-20243880145','简单减肥餐, 好吃不反弹',20.00,'萨巴蒂娜','中国轻工业出版社','2022-07-07','在库中',0),('ISBN-20243880155','其实她真的好喜欢你',25.00,'莫妮打','时代文艺出版社','2022-02-02','在库中',0),('ISBN-20243880156','导游业务. 第7版',24.00,'全国导游人员资格考试教材编写组','旅游教育出版社','2022-08-22','在库中',0),('ISBN-20243880166','法医秦明. 幸存者',22.00,'法医秦明','北京联合出版公司','2022-02-22','在库中',0),('ISBN-20243880199','实用百草治百病',22.00,'宋纬文','福建科学技术出版社','2021-09-22','在库中',0);
+INSERT INTO `book` VALUES ('ISBN-20243880100','The C Programming Language',188.00,'Brian W. Kernighan','CHEP','1983-08-10','in library',3),('ISBN-20243880106','The C++ Programming Language',16.00,'Bjarne Stroustrup','PEP','1990-12-02','in library',0),('ISBN-20243880109','Data Structure',20.00,'Mark Allen Weiss','CHEP','1994-12-05','in library',0),('ISBN-20243880114','Introduction to Algorithms',32.00,'Thomas H. Cormen','PEP','1988-12-03','in library',0),('ISBN-20243880115','The Python Programming Language',20.00,'Cay Horstmann','MIT','2001-12-05','in library',1),('ISBN-20243880118','Object-Oriented Analysis',25.00,'Grady Booch','CHEP','1999-12-04','in library',0),('ISBN-20243880119','Software Engineering',22.00,'Ian Sommerville','PEP','2008-12-02','in library',0),('ISBN-20243880128','Database System Concepts',12.00,'Abraham Silberschat','CMP','1998-01-01','in library',0),('ISBN-20243880145','Modern Operating Systems',20.00,'Andrew S. Tanenbaum','MIT','2007-07-07','in library',0),('ISBN-20243880155','Compilers: Principles',25.00,'Alfred V. Aho','PEP','1987-02-02','in library',0),('ISBN-20243880156','Computer Networks',24.00,'Andrew S. Tanenbaum','MIT','2004-08-22','in library',0),('ISBN-20243880166','TCP/IP Illustrated',22.00,'W. Richard Stevens','CHEP','1976-02-22','in library',0),('ISBN-20243880199','The Java Programming Language',22.00,'Cay Horstmann','CMP','1990-09-22','in library',0);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,9 +69,9 @@ CREATE TABLE `lend_record` (
   `lend_time` datetime DEFAULT NULL,
   `dead_time` datetime DEFAULT NULL,
   `return_time` datetime DEFAULT NULL,
-  `status` char(3) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2055241731 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,6 +80,7 @@ CREATE TABLE `lend_record` (
 
 LOCK TABLES `lend_record` WRITE;
 /*!40000 ALTER TABLE `lend_record` DISABLE KEYS */;
+INSERT INTO `lend_record` VALUES (6,'ISBN-20243880100','The C Programming Language','123',2,'2024-04-22 17:20:19','2024-05-22 17:20:19','2024-04-22 17:20:27','returned'),(7,'ISBN-20243880115','The Python Programming Language','123',2,'2024-04-22 17:20:35','2024-06-21 17:20:35','2024-04-22 17:24:02','returned'),(8,'ISBN-20243880100','The C Programming Language','123',2,'2024-04-22 17:20:45','2024-05-22 17:20:45','2024-04-22 17:23:58','returned'),(9,'ISBN-20243880100','The C Programming Language','123',2,'2024-04-22 17:47:56','2024-05-22 17:47:56','2024-04-22 17:48:00','returned');
 /*!40000 ALTER TABLE `lend_record` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,7 +108,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','123',NULL,'男',1),(2,'123','123','123','女',2),(3,'321','123','15988961695','男',2);
+INSERT INTO `user` VALUES (1,'admin','123',NULL,'Male',1),(2,'123','123','123','Female',2),(3,'321','123','15988961695','Male',2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -120,4 +121,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-08 17:49:25
+-- Dump completed on 2024-04-22 17:51:45

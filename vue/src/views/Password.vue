@@ -9,14 +9,14 @@
           label-width="180px"
           class="demo-ruleForm"
       >
-        <el-form-item label="new password" prop="password">
+        <el-form-item label="New Password" prop="password">
           <el-input
               v-model="form2.password"
               type="password"
               autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="confirm new password" prop="checkpassword">
+        <el-form-item label="Confirm New Password" prop="checkpassword">
           <el-input
               v-model="form.checkpassword"
               type="password"
