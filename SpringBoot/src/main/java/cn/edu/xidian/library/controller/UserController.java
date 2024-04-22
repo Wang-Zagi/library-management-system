@@ -49,7 +49,7 @@ public class UserController {
         User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername,user.getUsername()));
         if(res != null)
         {
-            return Result.error("-1","用户名已被占用"); //TODO 翻译成英文
+            return Result.error("-1","Username is already in use.");
         }
         userMapper.insert(user);
         return Result.success();
@@ -59,7 +59,7 @@ public class UserController {
         User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername,user.getUsername()).eq(User::getPassword,user.getPassword()));
         if(res == null)
         {
-            return Result.error("-1","用户名或密码错误"); //TODO 翻译成英文
+            return Result.error("-1","Incorrect user name or password.");
         }
         String token = TokenUtils.genToken(res);
         res.setToken(token);
@@ -98,7 +98,7 @@ public class UserController {
         wrapper.eq(LendRecord::getBorrowerId,id)
                 .eq(LendRecord::getStatus,"on loan");
         if (lendRecordMapper.selectOne(wrapper) != null)
-            return Result.error("-1","用户有书籍正在借阅中，无法删除"); //TODO 翻译成英文
+            return Result.error("-1","The user has books on loan and cannot be deleted.");
         userMapper.deleteById(id);
         return Result.success();
     }
@@ -111,7 +111,7 @@ public class UserController {
             wrapper.eq(LendRecord::getBorrowerId,id)
                     .eq(LendRecord::getStatus,"on loan");
             if (lendRecordMapper.selectOne(wrapper) != null)
-                return Result.error("-1","用户有书籍正在借阅中，无法删除"); //TODO 翻译成英文
+                return Result.error("-1","The user has books on loan and cannot be deleted.");
         }
         userMapper.deleteBatchIds(ids);
         return Result.success();

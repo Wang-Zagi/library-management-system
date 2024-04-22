@@ -73,7 +73,7 @@ public class LendRecordController {
     public Result<?> delete(@PathVariable Long id){
         LendRecord record=lendRecordMapper.selectById(id);
         if(record.getStatus().equals("on loan"))
-            return Result.error("-1","该记录未归还，无法删除"); //TODO 翻译成英文
+            return Result.error("-1","The book was not returned and the record could not be deleted.");
         lendRecordMapper.deleteById(id);
         return Result.success();
     }
@@ -83,7 +83,7 @@ public class LendRecordController {
         for (Long id:ids){
             LendRecord record=lendRecordMapper.selectById(id);
             if(record.getStatus().equals("on loan"))
-                return Result.error("-1","该记录未归还，无法删除"); //TODO 翻译成英文
+                return Result.error("-1","The book was not returned and the record could not be deleted.");
         }
         lendRecordMapper.deleteBatchIds(ids);
         return Result.success();
