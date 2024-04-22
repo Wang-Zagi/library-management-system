@@ -4,7 +4,7 @@
     <div style="margin: 5px 0;">
 
       <el-form :inline="true" size="small">
-        <el-form-item label="Book ID">
+        <el-form-item label="Book ISBN">
           <el-input v-model="bookId" placeholder="Please enter the book number." clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
@@ -25,7 +25,7 @@
 
     <!-- Data Fields -->
     <el-table :data="recordList" stripe :border="true">
-      <el-table-column prop="bookId" label="Book ID" sortable />
+      <el-table-column prop="bookId" label="Book ISBN" sortable />
       <el-table-column prop="bookName" label="Book Name" />
       <el-table-column prop="lendTime" label="Borrow Time" />
       <el-table-column prop="deadTime" label="Latest Return Date" />
