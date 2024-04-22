@@ -1,7 +1,7 @@
 <template>
 <div  class="login-container"  >
     <el-form ref="form" :model="form"    :rules="rules" class="login-page">
-      <h2 class="title" style="margin-bottom: 20px">User registration</h2>
+      <h2 class="title" style="margin-bottom: 20px;text-align: center">User Register</h2>
       <el-form-item prop="username" >
         <el-input v-model="form.username" placeholder="Please enter your username." clearable >
           <template #prefix>
@@ -23,10 +23,10 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="role">
-        <el-radio v-model="form.role" label="2">reader</el-radio>
-        <el-radio v-model="form.role" label="1">admin</el-radio>
-      </el-form-item>
+<!--      <el-form-item prop="role">-->
+<!--        <el-radio v-model="form.role" label="2">reader</el-radio>-->
+<!--        <el-radio v-model="form.role" label="1">admin</el-radio>-->
+<!--      </el-form-item>-->
       <el-form-item prop="authorize" v-if="form.role==1">
         <el-input v-model="form.authorize" placeholder="Please enter the administrator registration code." clearable show-password>
           <template #prefix>
@@ -50,7 +50,9 @@ export default {
   name: "Login",
   data(){
     return{
-      form:{},
+      form:{
+        role:"2"
+      },
       validCode: '',
       rules: {
         username: [

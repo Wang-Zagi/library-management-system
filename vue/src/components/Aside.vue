@@ -56,12 +56,12 @@
         <span>Change Password</span>
       </el-menu-item>
     </el-sub-menu>
-    <el-menu-item index="/dashboard" v-if="user.role == 1">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icondashboard "></use>
-      </svg>
-      <span>Data Statistics</span>
-    </el-menu-item>
+<!--    <el-menu-item index="/dashboard" v-if="user.role == 1">-->
+<!--      <svg class="icon" aria-hidden="true">-->
+<!--        <use xlink:href="#icondashboard "></use>-->
+<!--      </svg>-->
+<!--      <span>Data Statistics</span>-->
+<!--    </el-menu-item>-->
   </el-menu>
 
 </div>
