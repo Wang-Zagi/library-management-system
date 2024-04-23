@@ -16,7 +16,7 @@ public class LendRecord {
     private String bookId;
     private String bookName;
     private Integer borrowerId;
-    private Integer borrowerName;
+    private String borrowerName;
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date lendTime;
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")

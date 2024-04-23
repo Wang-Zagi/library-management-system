@@ -67,7 +67,7 @@
       <el-table-column prop="publisher" label="Publisher" min-width="6"/>
       <el-table-column prop="publishTime" label="Publish Time" min-width="8"/>
       <el-table-column prop="borrowNum" label="Borrow Times" min-width="8"/>
-      <el-table-column prop="status" label="Status" min-width="6">
+      <el-table-column prop="status" label="Status" min-width="7">
         <template v-slot="scope">
           <el-tag :type="scope.row.status==='in library'?'success':'warning'">{{scope.row.status}}</el-tag>
         </template>
@@ -230,7 +230,7 @@ export default {
               pageNum: 1,
               pageSize: this.total,
               borrowerId: this.user.id,
-              status:"on loan"
+              status:"borrowed"
             }
           }).then(res =>{
             console.log(res)
@@ -310,7 +310,7 @@ export default {
       lendRecord.lendTime = moment(nowTime).format("yyyy-MM-DD HH:mm:ss");
       nowTime.setDate(nowTime.getDate()+30);
       lendRecord.deadTime = moment(nowTime).format("yyyy-MM-DD HH:mm:ss");
-      lendRecord.status="on loan"
+      lendRecord.status="borrowed"
       request.post("/lendRecord",lendRecord).then(res =>{
         console.log(res)
         if(res.code == '0' ){
