@@ -58,9 +58,9 @@ public class BookController {
     public Result<?> delete(@PathVariable String id){
         LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(LendRecord::getBookId,id)
-                .eq(LendRecord::getStatus,"on loan");
+                .eq(LendRecord::getStatus,"borrowed");
         if (lendRecordMapper.selectOne(wrapper) != null)
-            return Result.error("-1","The book is on loan and can't be unloaded.");
+            return Result.error("-1","The book is borrowed and can't be unloaded.");
         bookMapper.deleteById(id);
         return Result.success();
     }
@@ -70,9 +70,9 @@ public class BookController {
         for (String id:ids){
             LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(LendRecord::getBookId,id)
-                    .eq(LendRecord::getStatus,"on loan");
+                    .eq(LendRecord::getStatus,"borrowed");
             if (lendRecordMapper.selectOne(wrapper) != null)
-                return Result.error("-1","The book is on loan and can't be unloaded.");
+                return Result.error("-1","The book is borrowed and can't be unloaded.");
         }
         bookMapper.deleteBatchIds(ids);
         return Result.success();

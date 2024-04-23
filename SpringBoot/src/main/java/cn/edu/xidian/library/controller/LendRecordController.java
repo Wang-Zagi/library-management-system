@@ -51,7 +51,7 @@ public class LendRecordController {
     public Result<?> lend(@RequestBody LendRecord lendRecord){
         lendRecordMapper.insert(lendRecord);
         Book book=bookMapper.selectById(lendRecord.getBookId());
-        book.setStatus("on loan");
+        book.setStatus("borrowed");
         book.setBorrowNum(book.getBorrowNum()+1);
         bookMapper.updateById(book);
         return Result.success();
@@ -61,7 +61,7 @@ public class LendRecordController {
     public  Result<?> update(@RequestBody LendRecord lendRecord){
         LendRecord oldLendRecord=lendRecordMapper.selectById(lendRecord.getId());
         lendRecordMapper.updateById(lendRecord);
-        if(oldLendRecord.getStatus().equals("on loan")&&lendRecord.getStatus().equals("returned")){
+        if(oldLendRecord.getStatus().equals("borrowed")&&lendRecord.getStatus().equals("returned")){
             Book book=bookMapper.selectById(lendRecord.getBookId());
             System.out.println(book);
             book.setStatus("in library");
@@ -72,7 +72,7 @@ public class LendRecordController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id){
         LendRecord record=lendRecordMapper.selectById(id);
-        if(record.getStatus().equals("on loan"))
+        if(record.getStatus().equals("borrowed"))
             return Result.error("-1","The book was not returned and the record could not be deleted.");
         lendRecordMapper.deleteById(id);
         return Result.success();
@@ -82,7 +82,7 @@ public class LendRecordController {
     public Result<?> deleteBatch(@RequestParam List<Long> ids){
         for (Long id:ids){
             LendRecord record=lendRecordMapper.selectById(id);
-            if(record.getStatus().equals("on loan"))
+            if(record.getStatus().equals("borrowed"))
                 return Result.error("-1","The book was not returned and the record could not be deleted.");
         }
         lendRecordMapper.deleteBatchIds(ids);
