@@ -24,13 +24,13 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `library` /*!40100 DEFAULT CHARACTER SE
 USE `library`;
 
 --
--- Table structure for table `book`
+-- Table structure for table `bookInfo`
 --
 
-DROP TABLE IF EXISTS `book`;
+DROP TABLE IF EXISTS `bookInfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `book` (
+CREATE TABLE `bookInfo` (
   `isbn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图书编号',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
   `price` decimal(10,2) DEFAULT NULL COMMENT '价格',
@@ -44,13 +44,13 @@ CREATE TABLE `book` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `book`
+-- Dumping data for table `bookInfo`
 --
 
-LOCK TABLES `book` WRITE;
-/*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES ('ISBN-20243880100','The C Programming Language',188.00,'Brian W. Kernighan','CHEP','1983-08-10','in library',3),('ISBN-20243880106','The C++ Programming Language',16.00,'Bjarne Stroustrup','PEP','1990-12-02','in library',0),('ISBN-20243880109','Data Structure',20.00,'Mark Allen Weiss','CHEP','1994-12-05','in library',0),('ISBN-20243880114','Introduction to Algorithms',32.00,'Thomas H. Cormen','PEP','1988-12-03','in library',0),('ISBN-20243880115','The Python Programming Language',20.00,'Cay Horstmann','MIT','2001-12-05','in library',1),('ISBN-20243880118','Object-Oriented Analysis',25.00,'Grady Booch','CHEP','1999-12-04','in library',0),('ISBN-20243880119','Software Engineering',22.00,'Ian Sommerville','PEP','2008-12-02','in library',0),('ISBN-20243880128','Database System Concepts',12.00,'Abraham Silberschat','CMP','1998-01-01','in library',0),('ISBN-20243880145','Modern Operating Systems',20.00,'Andrew S. Tanenbaum','MIT','2007-07-07','in library',0),('ISBN-20243880155','Compilers: Principles',25.00,'Alfred V. Aho','PEP','1987-02-02','in library',0),('ISBN-20243880156','Computer Networks',24.00,'Andrew S. Tanenbaum','MIT','2004-08-22','in library',0),('ISBN-20243880166','TCP/IP Illustrated',22.00,'W. Richard Stevens','CHEP','1976-02-22','in library',0),('ISBN-20243880199','The Java Programming Language',22.00,'Cay Horstmann','CMP','1990-09-22','in library',0);
-/*!40000 ALTER TABLE `book` ENABLE KEYS */;
+LOCK TABLES `bookInfo` WRITE;
+/*!40000 ALTER TABLE `bookInfo` DISABLE KEYS */;
+INSERT INTO `bookInfo` VALUES ('ISBN-20243880100','The C Programming Language',188.00,'Brian W. Kernighan','CHEP','1983-08-10','in library',3),('ISBN-20243880106','The C++ Programming Language',16.00,'Bjarne Stroustrup','PEP','1990-12-02','in library',0),('ISBN-20243880109','Data Structure',20.00,'Mark Allen Weiss','CHEP','1994-12-05','in library',0),('ISBN-20243880114','Introduction to Algorithms',32.00,'Thomas H. Cormen','PEP','1988-12-03','in library',0),('ISBN-20243880115','The Python Programming Language',20.00,'Cay Horstmann','MIT','2001-12-05','in library',1),('ISBN-20243880118','Object-Oriented Analysis',25.00,'Grady Booch','CHEP','1999-12-04','in library',0),('ISBN-20243880119','Software Engineering',22.00,'Ian Sommerville','PEP','2008-12-02','in library',0),('ISBN-20243880128','Database System Concepts',12.00,'Abraham Silberschat','CMP','1998-01-01','in library',0),('ISBN-20243880145','Modern Operating Systems',20.00,'Andrew S. Tanenbaum','MIT','2007-07-07','in library',0),('ISBN-20243880155','Compilers: Principles',25.00,'Alfred V. Aho','PEP','1987-02-02','in library',0),('ISBN-20243880156','Computer Networks',24.00,'Andrew S. Tanenbaum','MIT','2004-08-22','in library',0),('ISBN-20243880166','TCP/IP Illustrated',22.00,'W. Richard Stevens','CHEP','1976-02-22','in library',0),('ISBN-20243880199','The Java Programming Language',22.00,'Cay Horstmann','CMP','1990-09-22','in library',0);
+/*!40000 ALTER TABLE `bookInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

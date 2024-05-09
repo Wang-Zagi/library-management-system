@@ -5,7 +5,9 @@
 </template>
 
 <style>
-
+.el-table--small .el-table__cell {
+  padding: 0 0;
+}
 </style>
 
 <script>

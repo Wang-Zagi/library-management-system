@@ -1,6 +1,6 @@
 <template>
 <div  class="login-container"  >
-    <el-form ref="form" :model="form"   :rules="rules" class="login-page">
+    <el-form ref="form" :model="form" :rules="rules" class="login-page">
       <h2 class="title" style="margin-bottom: 20px;text-align: center">Library Management System Login</h2>
       <el-form-item prop="username" >
         <el-input v-model="form.username"  placeholder="user name" clearable>
@@ -19,8 +19,13 @@
       <el-form-item>
         <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">login</el-button>
       </el-form-item>
-      <el-form-item style="" text-align: center>
-        <el-button type="text" style="font-size: 16px" @click="$router.push('/register')">No account? Go to register.</el-button>
+      <el-form-item>
+        <div style="display:inline-block;width:50%;text-align: left">
+          <el-button type="text" style="font-size: 16px" @click="$router.push('/register')">Go to register>>></el-button>
+        </div>
+        <div style="display:inline-block;width:50%;text-align: right">
+          <el-button type="text" style="font-size: 16px" @click="$router.push('/')">Browse as guest>>></el-button>
+        </div>
       </el-form-item>
     </el-form>
 </div>

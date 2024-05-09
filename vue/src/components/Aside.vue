@@ -24,7 +24,7 @@
       <el-icon><grid /></el-icon>
       <span>Books Borrowed</span>
     </el-menu-item>
-    <el-menu-item index="/lendrecord" v-if="user.role !=0">
+    <el-menu-item index="/borrowrecord" v-if="user.role !=0">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconlend-record "></use>
       </svg>

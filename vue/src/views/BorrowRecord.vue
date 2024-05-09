@@ -5,17 +5,17 @@
     <div style="margin: 5px 0;">
       <el-form inline="true" size="small">
         <el-form-item label="Book ISBN" >
-          <el-input v-model="bookId" placeholder="Please enter book isbn"  clearable>
+          <el-input v-model="bookId" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
         <el-form-item label="Book Name" >
-          <el-input v-model="bookName" placeholder="Please enter book name"  clearable>
+          <el-input v-model="bookName" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
         <el-form-item label="Borrower Name" v-if="user.role === 1">
-          <el-input v-model="borrowerName" placeholder="Please enter borrower name"  clearable>
+          <el-input v-model="borrowerName" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
@@ -44,7 +44,7 @@
       <el-table-column prop="bookName" label="Book Name" />
       <el-table-column prop="borrowerId" label="Borrower Id" v-if="user.role ==1"/>
       <el-table-column prop="borrowerName" label="Borrower Name" v-if="user.role ==1"/>
-      <el-table-column prop="lendTime" label="Borrow Time"/>
+      <el-table-column prop="borrowTime" label="Borrow Time"/>
       <el-table-column prop="returnTime" label="Return Time"/>
       <el-table-column prop="status" label="Status" >
         <template v-slot="scope">
@@ -105,10 +105,10 @@ export default defineComponent({
     this.user = JSON.parse(userJson)
     this.load()
   },
-  name: 'lendRecord',
+  name: 'borrowRecord',
   methods: {
     load(){
-      request.get("/lendRecord",{
+      request.get("/borrowRecord",{
         params:{
           pageNum: this.currentPage,
           pageSize: this.pageSize,
@@ -127,7 +127,7 @@ export default defineComponent({
       let record = JSON.parse(JSON.stringify(row))
       record.status = "returned"
       record.returnTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
-      request.put("lendRecord",record).then(res =>{
+      request.put("borrowRecord",record).then(res =>{
         console.log(res)
         if(res.code == '0' ){
           ElMessage.success("return successfully")
@@ -138,7 +138,7 @@ export default defineComponent({
       })
     },
     handleDelete(row){
-      request.delete("lendRecord/"+row.id).then(res =>{
+      request.delete("borrowRecord/"+row.id).then(res =>{
         console.log(res)
         if(res.code == '0' ){
           ElMessage.success("delete successfully")
@@ -154,7 +154,7 @@ export default defineComponent({
         return
       }
       console.log(this.ids)
-      request.delete("/lendRecord", {
+      request.delete("/borrowRecord", {
         params:{ids:this.ids},
         paramsSerializer: params => {
           return qs.stringify(params, { indices: false })

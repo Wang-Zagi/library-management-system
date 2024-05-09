@@ -2,9 +2,9 @@ package cn.edu.xidian.library.controller;
 
 import cn.edu.xidian.library.commom.Result;
 import cn.edu.xidian.library.entity.Book;
-import cn.edu.xidian.library.entity.LendRecord;
+import cn.edu.xidian.library.entity.BorrowRecord;
 import cn.edu.xidian.library.mapper.BookMapper;
-import cn.edu.xidian.library.mapper.LendRecordMapper;
+import cn.edu.xidian.library.mapper.BorrowRecordMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -21,46 +21,32 @@ public class BookController {
     @Resource
     private BookMapper bookMapper;
     @Resource
-    private LendRecordMapper lendRecordMapper;
-
-    @GetMapping
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String isbn,
-                              @RequestParam(defaultValue = "") String name,
-                              @RequestParam(defaultValue = "") String author){
-        LambdaQueryWrapper<Book> wrappers = Wrappers.lambdaQuery();
-        if(StringUtils.isNotBlank(isbn)){
-            wrappers.like(Book::getIsbn, isbn);
-        }
-        if(StringUtils.isNotBlank(name)){
-            wrappers.like(Book::getName, name);
-        }
-        if(StringUtils.isNotBlank(author)){
-            wrappers.like(Book::getAuthor, author);
-        }
-        wrappers.orderByDesc(Book::getBorrowNum);    //按借阅次数排序
-        Page<Book> BookPage = bookMapper.selectPage(new Page<>(pageNum,pageSize), wrappers);
-        return Result.success(BookPage);
-    }
+    private BorrowRecordMapper borrowRecordMapper;
+    
     @PostMapping
     public Result<?> add(@RequestBody Book book){
+        if (bookMapper.selectById(book.getBarcode()) != null)
+            return Result.error("-1","Add failed. This Barcode is already in data base.");
         bookMapper.insert(book);
         return Result.success();
     }
-    @PutMapping
-    public Result<?> update(@RequestBody Book book){
-        bookMapper.updateById(book);
+    @PutMapping("/{barcode}")
+    @Transactional
+    public Result<?> update(@PathVariable String barcode,@RequestBody Book book){
+        if(!barcode.equals(book.getBarcode())){
+            if (bookMapper.selectById(book.getBarcode()) != null)
+                return Result.error("-1","Edit failed. This Barcode is already in data base.");
+            bookMapper.deleteById(barcode);
+            bookMapper.insert(book);
+        }
+        else bookMapper.updateById(book);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable String id){
-        LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(LendRecord::getBookId,id)
-                .eq(LendRecord::getStatus,"borrowed");
-        if (lendRecordMapper.selectOne(wrapper) != null)
-            return Result.error("-1","The book is borrowed and can't be unloaded.");
+        if (!bookMapper.selectById(id).getStatus().equals("in library"))
+            return Result.error("-1","The book is not library and can't be unloaded.");
         bookMapper.deleteById(id);
         return Result.success();
     }
@@ -68,11 +54,8 @@ public class BookController {
     @Transactional
     public Result<?> deleteBatch(@RequestParam List<String> ids){
         for (String id:ids){
-            LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
-            wrapper.eq(LendRecord::getBookId,id)
-                    .eq(LendRecord::getStatus,"borrowed");
-            if (lendRecordMapper.selectOne(wrapper) != null)
-                return Result.error("-1","The book is borrowed and can't be unloaded.");
+            if (!bookMapper.selectById(id).getStatus().equals("in library"))
+                return Result.error("-1","The book is not library and can't be unloaded.");
         }
         bookMapper.deleteBatchIds(ids);
         return Result.success();

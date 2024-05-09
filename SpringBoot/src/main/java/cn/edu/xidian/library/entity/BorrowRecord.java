@@ -8,17 +8,17 @@ import lombok.Data;
 
 import java.util.Date;
 
-@TableName("lend_record")
+@TableName("borrow_record")
 @Data
-public class LendRecord {
+public class BorrowRecord {
     @TableId (type = IdType.AUTO)
     private Integer id;
-    private String bookId;
+    private String bookBarcode;
     private String bookName;
     private Integer borrowerId;
     private String borrowerName;
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
-    private Date lendTime;
+    private Date borrowTime;
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date DeadTime;
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")

@@ -1,16 +1,14 @@
 <template>
-  <div class="home" style="padding: 10px">
     <!-- Search -->
     <div style="margin: 5px 0;">
-
       <el-form :inline="true" size="small">
         <el-form-item label="Book ISBN">
-          <el-input v-model="bookId" placeholder="Please enter the book number." clearable>
+          <el-input v-model="bookId" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item>
         <el-form-item label="Book Name">
-          <el-input v-model="bookName" placeholder="Please enter the book title." clearable>
+          <el-input v-model="bookName" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item>
@@ -27,7 +25,7 @@
     <el-table :data="recordList" stripe :border="true">
       <el-table-column prop="bookId" label="Book ISBN" sortable />
       <el-table-column prop="bookName" label="Book Name" />
-      <el-table-column prop="lendTime" label="Borrow Time" />
+      <el-table-column prop="borrowTime" label="Borrow Time" />
       <el-table-column prop="deadTime" label="Latest Return Date" />
       <el-table-column fixed="right" label="Operation">
         <template v-slot="scope">
@@ -58,7 +56,6 @@
       >
       </el-pagination>
     </div>
-  </div>
 </template>
 
 <script>
@@ -79,7 +76,7 @@ export default {
   name: 'borrowingBook',
   methods: {
     load(){
-      request.get("/lendRecord",{
+      request.get("/borrowRecord",{
         params:{
           pageNum: this.currentPage,
           pageSize: this.pageSize,
@@ -100,7 +97,7 @@ export default {
       let deadtTime = new Date(row.deadTime);
       deadtTime.setDate(deadtTime.getDate()+30);
       record.deadTime = moment(deadtTime).format("yyyy-MM-DD HH:mm:ss");
-      request.put("/lendRecord",record).then(res =>{
+      request.put("/borrowRecord",record).then(res =>{
         console.log(res)
         if(res.code == '0'){
           ElMessage({
@@ -119,7 +116,7 @@ export default {
       let record = JSON.parse(JSON.stringify(row))
       record.status = "returned"
       record.returnTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
-      request.put("lendRecord",record).then(res =>{
+      request.put("borrowRecord",record).then(res =>{
         console.log(res)
         if(res.code == '0' ){
           ElMessage.success("Return successfully")

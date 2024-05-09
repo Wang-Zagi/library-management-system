@@ -29,9 +29,9 @@ const routes = [
         component: () => import("@/views/Password")
       },
       {
-        path: 'lendrecord',
-        name: 'LendRecord',
-        component: () => import("@/views/LendRecord")
+        path: 'borrowrecord',
+        name: 'BorrowRecord',
+        component: () => import("@/views/BorrowRecord")
       },
       {
         path:'dashboard',

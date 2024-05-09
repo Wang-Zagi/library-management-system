@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.edu.xidian.library.mapper.BookInfoMapper">
+    <resultMap id="BookInfoWithBooks" type="BookInfo" autoMapping="true">
+        <id property="isbn" column="isbn"/>
+        <collection property="books" ofType="Book" autoMapping="true">
+            <id property="barcode" column="barcode"/>
+            <result property="isbn" column="b_isbn"/>
+        </collection>
+    </resultMap>
+
+    <select id="getList" resultMap="BookInfoWithBooks">
+        SELECT *
+        FROM(
+            SELECT * from book_info
+            <where>
+                <if test="isbn != null and isbn != ''">
+                    AND isbn LIKE CONCAT(#{isbn}, '%')
+                </if>
+                <if test="name != null and name != ''">
+                    AND name LIKE CONCAT('%', #{name}, '%')
+                </if>
+                <if test="author != null and author != ''">
+                    AND author LIKE CONCAT(#{author}, '%')
+                </if>
+            </where>
+            <if test="pageNum != null and pageSize != null">
+                LIMIT ${(pageNum - 1) * pageSize}, #{pageSize}
+            </if>
+            ) AS i
+        LEFT JOIN( SELECT barcode, isbn as b_isbn, location, status FROM book ) AS b
+        ON i.isbn = b_isbn
+        ORDER BY i.isbn ASC, b.barcode ASC
+    </select>
+    <select id="getTotal" resultType="java.lang.Integer">
+        SELECT count(*) from book_info
+        <where>
+            <if test="isbn != null and isbn != ''">
+                AND name LIKE CONCAT(#{isbn}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                AND name LIKE CONCAT(#{author}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

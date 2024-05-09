@@ -5,7 +5,9 @@
     <!--      侧边栏-->
     <Aside/>
     <!--      内容区域-->
-    <router-view v-on:userInfoChange="handleInfoChange" style="flex:1"/>
+    <el-main >
+      <router-view v-on:userInfoChange="handleInfoChange" style="flex:1"/>
+    </el-main>
   </div>
 </template>
 
@@ -28,6 +30,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>

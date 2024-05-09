@@ -5,17 +5,17 @@
     <div style="margin: 5px 0;">
       <el-form inline="true" size="small">
         <el-form-item label="Reader ID">
-          <el-input v-model="id" placeholder="Please enter the reader ID" clearable>
+          <el-input v-model="id" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
           </el-input>
         </el-form-item>
         <el-form-item label="Username">
-          <el-input v-model="name" placeholder="Please enter username" clearable>
+          <el-input v-model="name" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item>
         <el-form-item label="Phone Number">
-          <el-input v-model="phone" placeholder="Please enter phone number" clearable>
+          <el-input v-model="phone" placeholder="Please enter" clearable style="width: 200px">
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item>

@@ -51,7 +51,7 @@ export default {
       if(res.code == '0')
       {
 
-        this.cards[0].data = res.data.lendRecordCount
+        this.cards[0].data = res.data.borrowRecordCount
         this.cards[1].data = res.data.visitCount
         this.cards[2].data = res.data.bookCount
         this.cards[3].data = res.data.userCount

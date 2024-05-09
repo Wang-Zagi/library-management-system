@@ -2,9 +2,9 @@ package cn.edu.xidian.library.controller;
 
 import cn.edu.xidian.library.LoginUser;
 import cn.edu.xidian.library.commom.Result;
-import cn.edu.xidian.library.entity.LendRecord;
+import cn.edu.xidian.library.entity.BorrowRecord;
 import cn.edu.xidian.library.entity.User;
-import cn.edu.xidian.library.mapper.LendRecordMapper;
+import cn.edu.xidian.library.mapper.BorrowRecordMapper;
 import cn.edu.xidian.library.mapper.UserMapper;
 import cn.edu.xidian.library.utils.TokenUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,7 +24,7 @@ public class UserController {
     @Resource
     private UserMapper userMapper;
     @Resource
-    private LendRecordMapper lendRecordMapper;
+    private BorrowRecordMapper borrowRecordMapper;
 
     @GetMapping()
     public Result<?> findPage2(@RequestParam(defaultValue = "1") Integer pageNum,
@@ -94,10 +94,10 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id){
-        LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(LendRecord::getBorrowerId,id)
-                .eq(LendRecord::getStatus,"borrowed");
-        if (lendRecordMapper.selectOne(wrapper) != null)
+        LambdaQueryWrapper<BorrowRecord> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(BorrowRecord::getBorrowerId,id)
+                .eq(BorrowRecord::getStatus,"borrowed");
+        if (borrowRecordMapper.selectOne(wrapper) != null)
             return Result.error("-1","The user has books borrowed and cannot be deleted.");
         userMapper.deleteById(id);
         return Result.success();
@@ -107,10 +107,10 @@ public class UserController {
     @Transactional
     public  Result<?> deleteBatch(@RequestParam List<Integer> ids){
         for (Integer id:ids){
-            LambdaQueryWrapper<LendRecord> wrapper = Wrappers.lambdaQuery();
-            wrapper.eq(LendRecord::getBorrowerId,id)
-                    .eq(LendRecord::getStatus,"borrowed");
-            if (lendRecordMapper.selectOne(wrapper) != null)
+            LambdaQueryWrapper<BorrowRecord> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(BorrowRecord::getBorrowerId,id)
+                    .eq(BorrowRecord::getStatus,"borrowed");
+            if (borrowRecordMapper.selectOne(wrapper) != null)
                 return Result.error("-1","The user has books borrowed and cannot be deleted.");
         }
         userMapper.deleteBatchIds(ids);
