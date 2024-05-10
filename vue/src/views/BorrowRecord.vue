@@ -1,88 +1,85 @@
 <template>
-  <div class="home" style ="padding: 10px">
-
-    <!-- 搜索-->
-    <div style="margin: 5px 0;">
-      <el-form inline="true" size="small">
-        <el-form-item label="Book ISBN" >
-          <el-input v-model="bookId" placeholder="Please enter" clearable style="width: 200px">
-            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
-          </el-input>
-        </el-form-item >
-        <el-form-item label="Book Name" >
-          <el-input v-model="bookName" placeholder="Please enter" clearable style="width: 200px">
-            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
-          </el-input>
-        </el-form-item >
-        <el-form-item label="Borrower Name" v-if="user.role === 1">
-          <el-input v-model="borrowerName" placeholder="Please enter" clearable style="width: 200px">
-            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
-          </el-input>
-        </el-form-item >
-        <el-form-item>
-          <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">search</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button size="mini"  type="danger" @click="clear">reset</el-button>
-        </el-form-item>
-        <el-form-item style="margin-left: 30px" v-if="user.role == 1">
-          <el-popconfirm title="confirm delete?" @confirm="deleteBatch" v-if="user.role == 1">
-            <template #reference>
-              <el-button type="danger">Batch delete</el-button>
-            </template>
-          </el-popconfirm>
-        </el-form-item>
-      </el-form>
-    </div>
-
-    <el-table :data="recordList" stripe :border="true" @selection-change="handleSelectionChange">
-      <el-table-column v-if="user.role ==1"
-                       type="selection"
-                       width="55">
-      </el-table-column>
-      <el-table-column prop="bookId" label="Book ISBN"/>
-      <el-table-column prop="bookName" label="Book Name" />
-      <el-table-column prop="borrowerId" label="Borrower Id" v-if="user.role ==1"/>
-      <el-table-column prop="borrowerName" label="Borrower Name" v-if="user.role ==1"/>
-      <el-table-column prop="borrowTime" label="Borrow Time"/>
-      <el-table-column prop="returnTime" label="Return Time"/>
-      <el-table-column prop="status" label="Status" >
-        <template v-slot="scope">
-          <el-tag :type="scope.row.status=='returned'?'success':'warning'">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="user.role === 1" label="operation" width="230px">
-        <template v-slot="scope">
-          <el-popconfirm title="confirm return?" @confirm="handleReturn(scope.row)">
-            <template #reference>
-              <el-button type="primary" size="mini" :disabled="scope.row.status=='returned'">return</el-button>
-            </template>
-          </el-popconfirm>
-          <el-popconfirm title="confirm delete?" @confirm="handleDelete(scope.row)">
-            <template #reference>
-              <el-button type="danger" size="mini" >delete</el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!--    分页-->
-    <div style="margin: 10px 0">
-      <el-pagination
-          v-model:currentPage="currentPage"
-          :page-sizes="[5, 10, 20]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-          @size-change="load()"
-          @current-change="load()"
-      >
-      </el-pagination>
-
-    </div>
+  <!-- 搜索-->
+  <div style="margin: 5px 0;">
+    <el-form inline="true" size="small">
+      <el-form-item label="Book Barcode" >
+        <el-input v-model="bookBarcode" placeholder="Please enter" clearable style="width: 200px">
+          <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+        </el-input>
+      </el-form-item >
+      <el-form-item label="Book Name" >
+        <el-input v-model="bookName" placeholder="Please enter" clearable style="width: 200px">
+          <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+        </el-input>
+      </el-form-item >
+      <el-form-item label="Borrower Name" v-if="user.role === 1">
+        <el-input v-model="borrowerName" placeholder="Please enter" clearable style="width: 200px">
+          <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+        </el-input>
+      </el-form-item >
+      <el-form-item>
+        <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">Search</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="mini"  type="danger" @click="clear">Reset</el-button>
+      </el-form-item>
+<!--      <el-form-item style="margin-left: 30px" v-if="user.role == 1">-->
+<!--        <el-popconfirm title="confirm delete?" @confirm="deleteBatch" v-if="user.role == 1">-->
+<!--          <template #reference>-->
+<!--            <el-button type="danger">Batch delete</el-button>-->
+<!--          </template>-->
+<!--        </el-popconfirm>-->
+<!--      </el-form-item>-->
+    </el-form>
   </div>
 
+  <el-table :data="recordList" stripe :border="true"
+            @selection-change="handleSelectionChange"
+            :max-height="user.role==1?517:508"
+            :row-style="{height:'6.4vh'}"
+            :cell-style="{padding:0}">
+    <el-table-column prop="bookBarcode" label="Book Barcode" min-width="110px" fixed="left"/>
+    <el-table-column prop="bookName" label="Book Name" min-width="200px"/>
+    <el-table-column prop="borrowerId" label="Borrower Id" min-width="100px" v-if="user.role ==1"/>
+    <el-table-column prop="borrowerName" label="Borrower Name" min-width="120px" v-if="user.role ==1"/>
+    <el-table-column prop="borrowTime" label="Borrow Time" min-width="140px"/>
+    <el-table-column prop="returnTime" label="Return Time" min-width="140px"/>
+    <el-table-column prop="status" label="Status"  min-width="100px" fixed="right">
+      <template v-slot="scope">
+        <el-tag :type="scope.row.status === 'returned'?'success':
+                scope.row.status === 'confirming'?'primary':'warning'">{{scope.row.status}}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="user.role === 1" label="operation" width="180px" fixed="right">
+      <template v-slot="scope">
+        <el-popconfirm title="confirm return?" @confirm="handleConfirm(scope.row)" v-if="scope.row.status=='confirming'">
+          <template #reference>
+            <el-button type="primary" size="mini">Confirm</el-button>
+          </template>
+        </el-popconfirm>
+        <el-popconfirm title="confirm reject?" @confirm="handleReject(scope.row)" v-if="scope.row.status=='confirming'">
+          <template #reference>
+            <el-button type="danger" size="mini">Reject</el-button>
+          </template>
+        </el-popconfirm>
+      </template>
+    </el-table-column>
+  </el-table>
+
+  <!--    分页-->
+  <div style="margin: 10px 0">
+    <el-pagination
+        v-model:currentPage="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 20]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="load()"
+        @current-change="load()"
+    >
+    </el-pagination>
+
+  </div>
 </template>
 
 <script >
@@ -114,7 +111,7 @@ export default defineComponent({
           pageSize: this.pageSize,
           borrowerId: this.user.role==2?this.user.id:null,
           borrowerName: this.borrowerName,
-          bookId: this.bookId,
+          bookBarcode: this.bookBarcode,
           bookName: this.bookName,
         }
       }).then(res =>{
@@ -123,15 +120,25 @@ export default defineComponent({
         this.total = res.data.total
       })
     },
-    handleReturn(row){
+    handleConfirm(row){
       let record = JSON.parse(JSON.stringify(row))
       record.status = "returned"
-      record.returnTime = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
       request.put("borrowRecord",record).then(res =>{
         console.log(res)
-        if(res.code == '0' ){
-          ElMessage.success("return successfully")
-        }
+        if(res.code == '0' )
+          ElMessage.success("Confirm successfully")
+        else
+          ElMessage.error(res.msg)
+        this.load()
+      })
+    },
+    handleReject(row){
+      let record = JSON.parse(JSON.stringify(row))
+      record.status = "borrowing"
+      request.put("borrowRecord",record).then(res =>{
+        console.log(res)
+        if(res.code == '0' )
+          ElMessage.success("Reject successfully")
         else
           ElMessage.error(res.msg)
         this.load()
@@ -173,7 +180,7 @@ export default defineComponent({
       this.ids = val.map(v =>v.id)
     },
     clear(){
-      this.bookId = null
+      this.bookBarcode = null
       this.bookName = null
       this.borrowerName = null
       this.load()
@@ -218,7 +225,7 @@ export default defineComponent({
   },
   data() {
     return {
-      bookId:null,
+      bookBarcode:null,
       bookName:null,
       borrowerName:null,
       total:10,

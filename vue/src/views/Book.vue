@@ -60,18 +60,18 @@
             :cell-style="{padding:0}"
             @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="40" v-if="user.role ===1"/>
-    <el-table-column prop="isbn" label="Book ISBN" min-width="10" fixed="left"/>
-    <el-table-column prop="name" label="Book Name" min-width="16"/>
-    <el-table-column prop="price" label="Price" min-width="4"/>
-    <el-table-column prop="author" label="Author" min-width="10"/>
-    <el-table-column prop="publisher" label="Publisher" min-width="6"/>
-    <el-table-column prop="publishTime" label="Publish Time" min-width="8"/>
-    <el-table-column label="Entities" type="expand" width="80px">
+    <el-table-column prop="isbn" label="Book ISBN" min-width="140px" fixed="left"/>
+    <el-table-column prop="name" label="Book Name" min-width="200px"/>
+    <el-table-column prop="price" label="Price" min-width="60px"/>
+    <el-table-column prop="author" label="Author" min-width="140px"/>
+    <el-table-column prop="publisher" label="Publisher" min-width="100px"/>
+    <el-table-column prop="publishTime" label="Publish Time" min-width="100px"/>
+    <el-table-column label="Entities" type="expand" width="80px" fixed="right">
       <template #default="props">
         <el-table :data="props.row.books"
                   :row-style="{height:'5vh'}"
                   style="width:100%;"
-                  border >
+                  border>
           <el-table-column label="Index" align="center" min-width="5">
             <template #default="scope" >
               <span>{{scope.$index+1}}</span>
@@ -84,7 +84,7 @@
               <el-tag :type="scope.row.status==='in library'?'success':'warning'">{{scope.row.status}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="Operation" min-width="10" v-if="user.role === 1">
+          <el-table-column label="Operation" min-width="10" v-if="user.role === 1">
             <template v-slot="scope">
               <el-button type="info" size="mini" @click ="editEntity(scope.row)">Edit</el-button>
               <el-popconfirm title="Confirm to delete?" @confirm="deleteEntity(scope.row.barcode)">
@@ -97,7 +97,7 @@
         </el-table>
       </template>
     </el-table-column>
-    <el-table-column label="Operation" min-width="16" v-if="user.role === 1">
+    <el-table-column label="Operation" min-width="250px" fixed="right" v-if="user.role === 1">
       <template v-slot="scope">
         <el-button type="info" size="mini" @click ="editInfo(scope.row)">Edit</el-button>
         <el-popconfirm title="Confirm to delete?" @confirm="deleteInfo(scope.row.isbn)">

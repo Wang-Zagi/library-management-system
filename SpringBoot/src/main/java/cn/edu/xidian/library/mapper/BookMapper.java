@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface BookMapper extends BaseMapper<Book> {
+    Book get(String barcode);
 }

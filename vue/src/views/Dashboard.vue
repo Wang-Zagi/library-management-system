@@ -142,9 +142,11 @@ export default {
 
 <style scoped>
 .box-card {
-   width: 80%;
+  width: 200px;
+  height: 120px;
   margin-bottom: 25px;
-  margin-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .clearfix {

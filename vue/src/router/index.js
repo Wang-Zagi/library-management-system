@@ -19,17 +19,17 @@ const routes = [
         component: () => import("@/views/Book")
       },
       {
-        path: 'person',
-        name: 'Person',
-        component: () => import("@/views/UserInfo")
+        path: 'borrow',
+        name: 'borrow',
+        component: () => import("@/views/Borrow")
       },
       {
-        path: 'password',
-        name: 'Password',
-        component: () => import("@/views/Password")
+        path: 'return',
+        name: 'return',
+        component: () => import("@/views/Return")
       },
       {
-        path: 'borrowrecord',
+        path: 'borrowRecord',
         name: 'BorrowRecord',
         component: () => import("@/views/BorrowRecord")
       },
@@ -39,10 +39,20 @@ const routes = [
         component:() => import("@/views/Dashboard")
       },
       {
-        path: 'bookwithuser',
-        name: 'BookWithUser',
+        path: 'borrowingBook',
+        name: 'BorrowingBook',
         component: () => import("@/views/BorrowingBook.vue")
-      }
+      },
+      {
+        path: 'person',
+        name: 'Person',
+        component: () => import("@/views/UserInfo")
+      },
+      {
+        path: 'password',
+        name: 'Password',
+        component: () => import("@/views/Password")
+      },
     ]
   },
   {

@@ -9,6 +9,7 @@
         <collection property="books" ofType="Book" autoMapping="true">
             <id property="barcode" column="barcode"/>
             <result property="isbn" column="b_isbn"/>
+            <result property="name" column="b_name"/>
         </collection>
     </resultMap>
 

@@ -22,7 +22,15 @@ public class BookController {
     private BookMapper bookMapper;
     @Resource
     private BorrowRecordMapper borrowRecordMapper;
-    
+
+    @GetMapping("{isbn}")
+    public Result<?> get(@PathVariable String isbn){
+        Book book = bookMapper.get(isbn);
+        if (book == null)
+            return Result.error("-1","The barcode isn't in library.");
+        return Result.success(book);
+    }
+
     @PostMapping
     public Result<?> add(@RequestBody Book book){
         if (bookMapper.selectById(book.getBarcode()) != null)

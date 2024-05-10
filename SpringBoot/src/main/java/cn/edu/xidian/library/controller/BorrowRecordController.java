@@ -46,11 +46,20 @@ public class BorrowRecordController {
         Page<BorrowRecord> BorrowRecordPage = borrowRecordMapper.selectPage(new Page<>(pageNum,pageSize), wrappers);
         return Result.success(BorrowRecordPage);
     }
+    @GetMapping("/total")
+    public Result<?> getTotal(@RequestParam String borrowerId){
+        LambdaQueryWrapper<BorrowRecord> wrappers = Wrappers.lambdaQuery();
+        if(StringUtils.isNotBlank(borrowerId))
+            wrappers.eq(BorrowRecord::getBorrowerId, borrowerId);
+        wrappers.ne(BorrowRecord::getStatus, "returned");
+        return Result.success(borrowRecordMapper.selectCount(wrappers));
+    }
     @PostMapping
     @Transactional
     public Result<?> borrow(@RequestBody BorrowRecord borrowRecord){
         borrowRecordMapper.insert(borrowRecord);
-        Book book =bookMapper.selectById(borrowRecord.getBookBarcode());
+        Book book = bookMapper.selectById(borrowRecord.getBookBarcode());
+        book.setStatus("borrowed");
         bookMapper.updateById(book);
         return Result.success();
     }
@@ -59,9 +68,9 @@ public class BorrowRecordController {
     public  Result<?> update(@RequestBody BorrowRecord borrowRecord){
         BorrowRecord oldBorrowRecord = borrowRecordMapper.selectById(borrowRecord.getId());
         borrowRecordMapper.updateById(borrowRecord);
-        if(oldBorrowRecord.getStatus().equals("borrowed")&& borrowRecord.getStatus().equals("returned")){
+        if(oldBorrowRecord.getStatus().equals("confirming")&& borrowRecord.getStatus().equals("returned")){
             Book book =bookMapper.selectById(borrowRecord.getBookBarcode());
-            System.out.println(book);
+            book.setStatus("in library");
             bookMapper.updateById(book);
         }
         return Result.success();
@@ -69,7 +78,7 @@ public class BorrowRecordController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id){
         BorrowRecord record= borrowRecordMapper.selectById(id);
-        if(record.getStatus().equals("borrowed"))
+        if(!record.getStatus().equals("returned"))
             return Result.error("-1","The book was not returned and the record could not be deleted.");
         borrowRecordMapper.deleteById(id);
         return Result.success();
@@ -79,7 +88,7 @@ public class BorrowRecordController {
     public Result<?> deleteBatch(@RequestParam List<Long> ids){
         for (Long id:ids){
             BorrowRecord record= borrowRecordMapper.selectById(id);
-            if(record.getStatus().equals("borrowed"))
+            if(!record.getStatus().equals("returned"))
                 return Result.error("-1","The book was not returned and the record could not be deleted.");
         }
         borrowRecordMapper.deleteBatchIds(ids);

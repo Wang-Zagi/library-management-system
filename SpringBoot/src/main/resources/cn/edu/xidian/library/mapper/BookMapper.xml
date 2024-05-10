@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.edu.xidian.library.mapper.BookMapper">
+    <resultMap id="BookInfoWithBooks" type="Book" autoMapping="true">
+        <id property="isbn" column="isbn"/>
+    </resultMap>
+
+    <select id="get" resultType="Book">
+        SELECT b.*,i.name from (
+            select *
+            from book
+            where barcode=#{barcode}
+        ) b
+        left join book_info i
+        ON i.isbn = b.isbn
+    </select>
+</mapper>

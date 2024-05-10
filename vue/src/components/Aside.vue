@@ -20,15 +20,27 @@
       </svg>
       <span>Book Query</span>
     </el-menu-item>
-    <el-menu-item index="/bookwithuser" v-if="user.role == 2">
-      <el-icon><grid /></el-icon>
-      <span>Books Borrowed</span>
+    <el-menu-item index="/borrow" v-if="user.role == 2">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#iconbook "></use>
+      </svg>
+      <span>Borrow</span>
     </el-menu-item>
-    <el-menu-item index="/borrowrecord" v-if="user.role !=0">
+    <el-menu-item index="/return" v-if="user.role == 2">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#iconbook "></use>
+      </svg>
+      <span>Return</span>
+    </el-menu-item>
+    <el-menu-item index="/borrowingBook" v-if="user.role == 2">
+      <el-icon><grid /></el-icon>
+      <span>Borrowing Books</span>
+    </el-menu-item>
+    <el-menu-item index="/borrowRecord" v-if="user.role !=0">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconlend-record "></use>
       </svg>
-      <span>Borrowing Records</span>
+      <span>Borrow Records</span>
     </el-menu-item>
     <el-menu-item index="/user" v-if="user.role == 1">
       <svg class="icon" aria-hidden="true">
