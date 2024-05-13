@@ -346,7 +346,20 @@ export default {
       this.infoMode="Edit"
     },
     getInfo(){
-      //TODO 调用ISBN API接口自动填充信息
+      //TODO 调用ISBN API接口自动填充信息（待更换稳定接口）
+      request.get('http://data.isbn.work/openApi/getInfoByIsbn?appKey=ae1718d4587744b0b79f940fbef69e77&isbn='+this.bookInfo.isbn)
+          .then(resp=>{
+            console.log(resp.data)
+            if(resp.code!='0'){
+              ElMessage.error(resp.msg)
+              return
+            }
+            this.bookInfo.name = resp.data.bookName
+            this.bookInfo.author= resp.data.author
+            this.bookInfo.price= resp.data.price/100
+            this.bookInfo.publisher=resp.data.press
+            this.bookInfo.publishTime=resp.data.pressDate+"-01"
+          });
     },
     submitEntity(){
       if( this.entityMode === "Edit" ){

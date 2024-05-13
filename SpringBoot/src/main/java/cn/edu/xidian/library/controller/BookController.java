@@ -54,7 +54,7 @@ public class BookController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable String id){
         if (!bookMapper.selectById(id).getStatus().equals("in library"))
-            return Result.error("-1","The book is not library and can't be unloaded.");
+            return Result.error("-1","Delete failed. The book is not in library.");
         bookMapper.deleteById(id);
         return Result.success();
     }
@@ -63,7 +63,7 @@ public class BookController {
     public Result<?> deleteBatch(@RequestParam List<String> ids){
         for (String id:ids){
             if (!bookMapper.selectById(id).getStatus().equals("in library"))
-                return Result.error("-1","The book is not library and can't be unloaded.");
+                return Result.error("-1","Delete failed. There is book not in library.");
         }
         bookMapper.deleteBatchIds(ids);
         return Result.success();
