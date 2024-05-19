@@ -19,6 +19,8 @@
 -- Current Database: `library`
 --
 
+DROP DATABASE library;
+
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `library` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `library`;
@@ -98,6 +100,7 @@ CREATE TABLE `user` (
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '电话号码',
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '性别',
   `role` int NOT NULL COMMENT '角色、1：管理员 2：普通用户',
+    `dept` double DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -108,7 +111,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','123',NULL,'Male',1),(2,'123','123','123','Female',2),(3,'321','123','15988961695','Male',2);
+INSERT INTO `user` VALUES (1,'admin','123',NULL,'Male',1,0),(2,'123','123','123','Female',2,0),(3,'321','123','15988961695','Male',2,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

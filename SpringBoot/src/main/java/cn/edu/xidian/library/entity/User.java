@@ -18,4 +18,5 @@ public class User {
     @TableField(exist = false)
     private String token;
     private Integer role;
+    private Double debt;
 }
