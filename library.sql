@@ -19,71 +19,93 @@
 -- Current Database: `library`
 --
 
-DROP DATABASE library;
-
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `library` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `library`;
 
 --
--- Table structure for table `bookInfo`
+-- Table structure for table `book`
 --
 
-DROP TABLE IF EXISTS `bookInfo`;
+DROP TABLE IF EXISTS `book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `bookInfo` (
+CREATE TABLE `book` (
+  `barcode` char(10) NOT NULL,
+  `isbn` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`barcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `book`
+--
+
+LOCK TABLES `book` WRITE;
+/*!40000 ALTER TABLE `book` DISABLE KEYS */;
+INSERT INTO `book` VALUES ('00000001','9787302147510','gfghjg','borrowed'),('00000002','9787560662701','Floor2 SectionA Shelf2 P10-1','in library'),('00000003','9787302561941','Floor2 Section2 Shelf2 P10-1','in library'),('000005','9787300276427','Floor1 Section2','borrowed'),('000006','9787300276427','123','in library');
+/*!40000 ALTER TABLE `book` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `book_info`
+--
+
+DROP TABLE IF EXISTS `book_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `book_info` (
   `isbn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图书编号',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
   `price` decimal(10,2) DEFAULT NULL COMMENT '价格',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者',
   `publisher` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '出版社',
   `publish_time` date DEFAULT NULL COMMENT '出版时间',
-  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
-  `borrow_num` int NOT NULL DEFAULT '0' COMMENT '此书被借阅次数',
   PRIMARY KEY (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `bookInfo`
+-- Dumping data for table `book_info`
 --
 
-LOCK TABLES `bookInfo` WRITE;
-/*!40000 ALTER TABLE `bookInfo` DISABLE KEYS */;
-INSERT INTO `bookInfo` VALUES ('ISBN-20243880100','The C Programming Language',188.00,'Brian W. Kernighan','CHEP','1983-08-10','in library',3),('ISBN-20243880106','The C++ Programming Language',16.00,'Bjarne Stroustrup','PEP','1990-12-02','in library',0),('ISBN-20243880109','Data Structure',20.00,'Mark Allen Weiss','CHEP','1994-12-05','in library',0),('ISBN-20243880114','Introduction to Algorithms',32.00,'Thomas H. Cormen','PEP','1988-12-03','in library',0),('ISBN-20243880115','The Python Programming Language',20.00,'Cay Horstmann','MIT','2001-12-05','in library',1),('ISBN-20243880118','Object-Oriented Analysis',25.00,'Grady Booch','CHEP','1999-12-04','in library',0),('ISBN-20243880119','Software Engineering',22.00,'Ian Sommerville','PEP','2008-12-02','in library',0),('ISBN-20243880128','Database System Concepts',12.00,'Abraham Silberschat','CMP','1998-01-01','in library',0),('ISBN-20243880145','Modern Operating Systems',20.00,'Andrew S. Tanenbaum','MIT','2007-07-07','in library',0),('ISBN-20243880155','Compilers: Principles',25.00,'Alfred V. Aho','PEP','1987-02-02','in library',0),('ISBN-20243880156','Computer Networks',24.00,'Andrew S. Tanenbaum','MIT','2004-08-22','in library',0),('ISBN-20243880166','TCP/IP Illustrated',22.00,'W. Richard Stevens','CHEP','1976-02-22','in library',0),('ISBN-20243880199','The Java Programming Language',22.00,'Cay Horstmann','CMP','1990-09-22','in library',0);
-/*!40000 ALTER TABLE `bookInfo` ENABLE KEYS */;
+LOCK TABLES `book_info` WRITE;
+/*!40000 ALTER TABLE `book_info` DISABLE KEYS */;
+INSERT INTO `book_info` VALUES ('9787111599715','机械工业出版社计算机科学丛书计算机网络:自顶向下方法(原书第7版)',89.00,'库罗斯 陈鸣','机械工业出版社','2018-06-01'),('9787300276427','顾家北手把手教你雅思写作',66.00,'顾家北','中国人民大学出版社','2019-01-01'),('9787302147510','数据结构(C语言版)(配光盘)',35.00,'严蔚敏,吴伟民','清华大学出版社','2007-03-01'),('9787302561941','Java语言程序设计（第4版）（本科教材）',69.80,'郎波','清华大学出版社','2021-01-01'),('9787560662701','Python程序设计，',39.00,'李光夏','西安电子科技大学出版社','2022-03-01');
+/*!40000 ALTER TABLE `book_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `lend_record`
+-- Table structure for table `borrow_record`
 --
 
-DROP TABLE IF EXISTS `lend_record`;
+DROP TABLE IF EXISTS `borrow_record`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `lend_record` (
+CREATE TABLE `borrow_record` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `book_id` varchar(255) DEFAULT NULL,
+  `book_barcode` varchar(255) DEFAULT NULL,
   `book_name` varchar(255) DEFAULT NULL,
-  `borrower_name` varchar(255) DEFAULT NULL,
   `borrower_id` bigint DEFAULT NULL,
-  `lend_time` datetime DEFAULT NULL,
+  `borrower_name` varchar(255) DEFAULT NULL,
+  `borrow_time` datetime DEFAULT NULL,
   `dead_time` datetime DEFAULT NULL,
   `return_time` datetime DEFAULT NULL,
-  `status` varchar(20) DEFAULT NULL,
+  `status` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `lend_record`
+-- Dumping data for table `borrow_record`
 --
 
-LOCK TABLES `lend_record` WRITE;
-/*!40000 ALTER TABLE `lend_record` DISABLE KEYS */;
-INSERT INTO `lend_record` VALUES (6,'ISBN-20243880100','The C Programming Language','123',2,'2024-04-22 17:20:19','2024-05-22 17:20:19','2024-04-22 17:20:27','returned'),(7,'ISBN-20243880115','The Python Programming Language','123',2,'2024-04-22 17:20:35','2024-06-21 17:20:35','2024-04-22 17:24:02','returned'),(8,'ISBN-20243880100','The C Programming Language','123',2,'2024-04-22 17:20:45','2024-05-22 17:20:45','2024-04-22 17:23:58','returned'),(9,'ISBN-20243880100','The C Programming Language','123',2,'2024-04-22 17:47:56','2024-05-22 17:47:56','2024-04-22 17:48:00','returned');
-/*!40000 ALTER TABLE `lend_record` ENABLE KEYS */;
+LOCK TABLES `borrow_record` WRITE;
+/*!40000 ALTER TABLE `borrow_record` DISABLE KEYS */;
+INSERT INTO `borrow_record` VALUES (34,'00000002','Python程序设计',2,'123','2024-05-13 17:30:55','2024-06-12 17:30:55','2024-05-13 17:31:07','returned'),(35,'00000001','数据结构(C语言版)(配光盘)',2,'123','2024-05-13 17:34:53','2024-06-12 17:34:53','2024-05-15 08:26:12','returned'),(36,'00000003','Java语言程序设计（第4版）（本科教材）',2,'123','2024-05-13 17:34:53','2024-06-12 17:34:53','2024-05-13 17:35:22','returned'),(37,'000005','顾家北手把手教你雅思写作',2,'123','2024-05-14 15:48:22','2024-06-13 15:48:22','2024-05-14 15:51:29','confirming'),(38,'00000001','数据结构(C语言版)(配光盘)',2,'123','2024-05-15 08:27:38','2024-06-14 08:27:38','2024-05-15 08:27:48','confirming');
+/*!40000 ALTER TABLE `borrow_record` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -100,9 +122,9 @@ CREATE TABLE `user` (
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '电话号码',
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '性别',
   `role` int NOT NULL COMMENT '角色、1：管理员 2：普通用户',
-    `dept` double DEFAULT 0,
+  `debt` int DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +133,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','123',NULL,'Male',1,0),(2,'123','123','123','Female',2,0),(3,'321','123','15988961695','Male',2,0);
+INSERT INTO `user` VALUES (1,'admin','123',NULL,'Male',1, 0),(2,'123','123','123','Female',2, 0),(3,'321','123','15988961695','Male',2, 0),(6,'Kelei','123456','123456','Male',2, 0), (7,'yao', '123456', '18637047510', 'Male', 2, 1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -124,4 +146,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-22 17:51:45
+-- Dump completed on 2024-05-20 21:11:58

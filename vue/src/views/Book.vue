@@ -200,7 +200,7 @@
 
 <script>
 import request from "../utils/request";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import moment from "moment";
 import router from "@/router";
 import {InfoFilled} from "@element-plus/icons";
@@ -222,6 +222,15 @@ export default {
     load(){
       this.numOfOutDataBook =0;
       this.outDateBook =[];
+      let debt = this.user.debt;
+      if (debt > 0) {
+        ElMessageBox.alert('You have a debt of ' + debt + ' yuan, please pay it off as soon as possible. You cannot borrow any book before you pay.', 'Warning', {
+          confirmButtonText: 'OK',
+          callback: action => {
+            console.log(action)
+          }
+        })
+      }
       request.get("/bookInfo/total",{
         params:{
           isbn: this.isbn,

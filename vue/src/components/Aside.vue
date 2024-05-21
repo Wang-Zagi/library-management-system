@@ -20,7 +20,7 @@
       </svg>
       <span>Book Query</span>
     </el-menu-item>
-    <el-menu-item index="/borrow" v-if="user.role == 2">
+    <el-menu-item index="/borrow" v-if="user.role == 2 && user.debt == 0">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>

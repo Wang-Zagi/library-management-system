@@ -19,6 +19,12 @@
         <el-form-item label="Phone">
           <el-input style="width: 40%" v-model="user.phone"></el-input>
         </el-form-item>
+        <el-form-item label="Debt">
+          <span v-text="this.user.debt"></span>
+          <span>
+            <button @click.prevent="payDebt" style="margin-left: 10px">Pay</button>
+          </span>
+        </el-form-item>
       </el-form>
       <div style="text-align: center">
         <el-button type="primary" @click="update">Save</el-button>
@@ -31,6 +37,8 @@
 import request from "@/utils/request";
 import {ElMessage} from "element-plus";
 import router from "@/router";
+import { time } from "echarts";
+import { duration } from "moment";
 
 export default {
   name: "Person",
@@ -53,7 +61,26 @@ export default {
         console.log(res)
         if (res.code == '0') {
           ElMessage.success("Update successful")
-          sessionStorage.setItem("user", JSON.stringify(this.user))
+          console.log(this.user)
+          // Trigger Layout to update user information
+          this.$emit("userInfoChange")
+        } else {
+          ElMessage.error(res.msg)
+        }
+      })
+    },
+    payDebt() {
+      console.log("pay debt")
+      const new_user = this.user
+      new_user.debt = 0
+      this.user.debt = 0
+      const userJson = JSON.stringify(this.user)
+      sessionStorage.setItem("user",userJson)
+      request.put("/user", new_user).then(res => {
+        console.log(res)
+        if (res.code == '0') {
+          ElMessage.success("Pay successful")
+          console.log(this.user)
           // Trigger Layout to update user information
           this.$emit("userInfoChange")
         } else {
