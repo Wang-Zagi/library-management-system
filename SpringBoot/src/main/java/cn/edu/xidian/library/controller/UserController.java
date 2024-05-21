@@ -92,6 +92,19 @@ public class UserController {
         return Result.success();
     }
 
+    @PostMapping("/debt")
+    public Result<?> getDebt(@RequestParam Integer id) {
+        User user = userMapper.selectById(id);
+        return Result.success(user.getDebt());
+    }
+
+    @PutMapping("/payDebt")
+    public  Result payDebt(@RequestParam Integer id) {
+        User user = userMapper.selectById(id);
+        user.setDebt(0);
+        return Result.success();
+    }
+
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id){
         LambdaQueryWrapper<BorrowRecord> wrapper = Wrappers.lambdaQuery();
