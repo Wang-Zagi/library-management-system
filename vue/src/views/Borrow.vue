@@ -70,7 +70,7 @@ export default {
         return;
       }
       if(this.bookList.length+this.user.borrowingTotal>5){
-        ElMessage.warning("The total number of books you borrow at the same time cannot exceed 5.")
+        ElMessage.warning("The total overdueNum of books you borrow at the same time cannot exceed 5.")
         return;
       }
       let borrowRecord={

@@ -20,7 +20,7 @@
       </svg>
       <span>Book Query</span>
     </el-menu-item>
-    <el-menu-item index="/borrow" v-if="user.role == 2 && user.debt == 0">
+    <el-menu-item index="/borrow" v-if="user.role == 2 && user.debt == 0 && overdueNum == 0">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>
@@ -55,7 +55,7 @@
         </svg>
         <span>Personal Information</span>
       </template>
-      <el-menu-item index="/person" style="font-color: white">
+      <el-menu-item index="/userInfo" style="font-color: white">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-a-bianji1 "></use>
         </svg>
@@ -83,18 +83,48 @@
 
 
 
+import request from "@/utils/request";
+import {ElMessage, ElMessageBox} from "element-plus";
+
 export default {
   name: "Aside",
   components:{},
   created(){
     let userStr = sessionStorage.getItem("user")
-    if(userStr) this.user = JSON.parse(userStr)
+    if(userStr) {
+      this.user = JSON.parse(userStr)
+      request.post("user/login", this.user).then(res => {
+        if (res.code == '0') {
+          console.log(res.data)
+          this.user=res.data
+          sessionStorage.setItem("user",JSON.stringify(this.user))//缓存用户信息
+        } else
+          ElMessage.error(res.msg)
+      })
+      if(this.user.role === 2){
+        request.get("/borrowRecord",{
+          params:{
+            borrowerId: this.user.id,
+            status:"borrowing"
+          }
+        }).then(res => {
+          console.log(res)
+          let records = res.data.records
+          let nowDate = new Date();
+          this.overdueNum = records
+              .filter(r => new Date(r.deadTime) < nowDate)
+              .map(() => 1)
+              .reduce((s, i) => s + i, 0)
+        })
+      }
+    }
   },
   data(){
     return {
       user:{
         role:0
       },
+      overdueNum:0
     }
   }
 }

@@ -20,9 +20,9 @@
           <el-input style="width: 40%" v-model="user.phone"></el-input>
         </el-form-item>
         <el-form-item label="Debt">
-          <span v-text="this.user.debt"></span>
+          <span :style="user.debt>0?{color:'red'}:{}" v-text="'$'+this.user.debt"></span>
           <span>
-            <button @click.prevent="payDebt" style="margin-left: 10px">Pay</button>
+            <el-button type="danger" @click="payDebt" :disabled="user.debt==0" style="margin-left: 20px">Pay</el-button>
           </span>
         </el-form-item>
       </el-form>
@@ -41,7 +41,7 @@ import { time } from "echarts";
 import { duration } from "moment";
 
 export default {
-  name: "Person",
+  name: "userInfo",
   data() {
     return {
       user: {}
@@ -70,23 +70,32 @@ export default {
       })
     },
     payDebt() {
-      console.log("pay debt")
-      const new_user = this.user
-      new_user.debt = 0
-      this.user.debt = 0
-      const userJson = JSON.stringify(this.user)
-      sessionStorage.setItem("user",userJson)
-      request.put("/user", new_user).then(res => {
-        console.log(res)
-        if (res.code == '0') {
-          ElMessage.success("Pay successful")
-          console.log(this.user)
-          // Trigger Layout to update user information
-          this.$emit("userInfoChange")
-        } else {
-          ElMessage.error(res.msg)
-        }
-      })
+      this.$confirm(
+          'Are you sure to pay the debt?',
+          'Warning',
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+          }
+      )
+          .then(()=> {
+            console.log("pay debt")
+            this.user.debt = 0
+            const userJson = JSON.stringify(this.user)
+            sessionStorage.setItem("user", userJson)
+            request.put("/user", this.user).then(res => {
+              console.log(res)
+              if (res.code == '0') {
+                ElMessage.success("Pay successful")
+                console.log(this.user)
+                // Trigger Layout to update user information
+                this.$emit("userInfoChange")
+              } else {
+                ElMessage.error(res.msg)
+              }
+            })
+          })
     }
   }
 }

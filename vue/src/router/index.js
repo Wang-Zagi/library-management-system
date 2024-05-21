@@ -44,8 +44,8 @@ const routes = [
         component: () => import("@/views/BorrowingBook.vue")
       },
       {
-        path: 'person',
-        name: 'Person',
+        path: 'userInfo',
+        name: 'userInfo',
         component: () => import("@/views/UserInfo")
       },
       {

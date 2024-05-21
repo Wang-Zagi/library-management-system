@@ -176,23 +176,21 @@
     </el-dialog>
 
     <el-dialog
-        v-model="dialogVisible3"
-        v-if="numOfOutDataBook!==0"
-        title="Overdue Details"
-        width="50%"
+        v-model="warnDialogVisible"
+        title="Overdue and Debt"
+        width="500px"
     >
-      <el-table :data="outDateBook" style="width: 100%">
-        <el-table-column prop="isbn" label="Book ISBN" />
-        <el-table-column prop="bookName" label="Book Name" />
-        <el-table-column prop="borrowTime" label="Borrowing Date" />
-        <el-table-column prop="deadTime" label="Deadline" />
-      </el-table>
-
-      <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible3 = false"
-        >Confirm</el-button>
+      <span>
+        You have <span :style="overdueNum>0?{color:'red'}:{}">{{overdueNum}}</span> records past the return time,<br/>
+        and have a debt of <span :style="user.debt>0?{color:'red'}:{}">{{user.debt}}</span> dollars.<br/>
+        please return books and pay fine off as soon as possible.<br/>
+        You cannot borrow any book before that.
       </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="danger" @click="$router.push('/borrowingBook')">Go to return</el-button>
+          <el-button type="danger" @click="$router.push('/userInfo')">Go to pay</el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
@@ -222,12 +220,39 @@ export default {
     load(){
       this.numOfOutDataBook =0;
       this.outDateBook =[];
-      let debt = this.user.debt;
-      if (debt > 0) {
-        ElMessageBox.alert('You have a debt of ' + debt + ' yuan, please pay it off as soon as possible. You cannot borrow any book before you pay.', 'Warning', {
-          confirmButtonText: 'OK',
-          callback: action => {
-            console.log(action)
+      this.overdueNum=0
+      if(this.user.role === 2){
+        request.get("/borrowRecord",{
+          params:{
+            borrowerId: this.user.id,
+            status:"borrowing"
+          }
+        }).then(res =>{
+          console.log(res)
+          let records = res.data.records
+          let nowDate = new Date();
+          this.overdueNum=records
+              .filter(r=> new Date(r.deadTime)<nowDate)
+              .map(()=>1)
+              .reduce((s,i)=>s+i,0)
+          console.log(this.overdueNum)
+          if (this.overdueNum>0 || this.user.debt > 0) {
+            this.warnDialogVisible=true
+            // ElMessageBox.alert(`
+            // You have ${overdueNum} records past the return time,<br/>
+            // and have a debt of ${debt} dollars.<br/>
+            // please return books and pay debt off as soon as possible.<br/>
+            // You cannot borrow any book before that.`,
+            //     'Warning', {
+            //       confirmButtonText: 'Go to return and pay',
+            //       dangerouslyUseHTMLString: true
+            //     })
+            //     .then(()=>{
+            //       if(overdueNum>0)
+            //         this.$router.push("/borrowingBook")
+            //       else
+            //         this.$router.push("/userInfo")
+            //     })
           }
         })
       }
@@ -253,33 +278,6 @@ export default {
         console.log(res)
         this.bookInfoList = res.data
 
-        // if(this.user.role === 2){
-        //   request.get("/borrowRecord",{
-        //     params:{
-        //       pageNum: 1,
-        //       pageSize: this.total,
-        //       borrowerId: this.user.id,
-        //       status:"borrowed"
-        //     }
-        //   }).then(res =>{
-        //     console.log(res)
-        //     this.records = res.data.records
-        //     this.number = this.records.length;
-        //     var nowDate = new Date();
-        //     for(let i=0; i< this.number; i++){
-        //       let dDate = new Date(this.records[i].deadTime);
-        //       if(dDate < nowDate){
-        //         this.outDateBook[this.numOfOutDataBook] = {
-        //           isbn:this.records[i].isbn,
-        //           bookName : this.records[i].bookName,
-        //           deadTime : this.records[i].deadTime,
-        //           borrowTime : this.records[i].borrowTime,
-        //         };
-        //         this.numOfOutDataBook = this.numOfOutDataBook + 1;
-        //       }
-        //     }
-        //   })
-        // }
       })
     },
     clear(){
@@ -404,6 +402,7 @@ export default {
       this.entityMode="Add"
     },
     editEntity(row){
+
       this.book = JSON.parse(JSON.stringify(row))
       this.originBarcode = row.barcode
       this.entityDialogVisible = true
@@ -423,7 +422,7 @@ export default {
       this.ids = val.map(v =>v.isbn)
     },
     toLook(){
-      this.dialogVisible3 =true;
+      this.warnDialogVisible =true;
     },
   },
   data() {
@@ -438,14 +437,14 @@ export default {
       pageNum:1,
       pageSize: 10,
       user:{role:0},
-      number:0,
+      overdueNum:0,
       records:[],
       outDateBook:[],
       numOfOutDataBook: 0,
       ids:[],
       infoDialogVisible: false,
       entityDialogVisible: false,
-      dialogVisible3 : true,
+      warnDialogVisible : false,
       infoMode: 'Add',
       originIsbn:null,
       entityMode: 'Add',

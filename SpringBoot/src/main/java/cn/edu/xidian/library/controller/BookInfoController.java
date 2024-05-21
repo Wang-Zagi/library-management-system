@@ -61,7 +61,7 @@ public class BookInfoController {
     public Result<?> delete(@PathVariable String isbn){
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Book::getIsbn,isbn);
-        if (bookMapper.selectOne(wrapper) != null)
+        if (!bookMapper.selectObjs(wrapper).isEmpty())
             return Result.error("-1","Please remove all associated book entities first.");
         bookInfoMapper.deleteById(isbn);
         return Result.success();
@@ -73,7 +73,7 @@ public class BookInfoController {
         for (String id:ids){
             LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(Book::getIsbn,id);
-            if (bookMapper.selectOne(wrapper) != null)
+            if (!bookMapper.selectObjs(wrapper).isEmpty())
                 return Result.error("-1","Please remove all associated book entities first.");
         }
         bookInfoMapper.deleteBatchIds(ids);

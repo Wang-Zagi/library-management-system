@@ -27,6 +27,11 @@
     <el-table-column prop="bookName" label="Book Name" />
     <el-table-column prop="borrowTime" label="Borrow Time" />
     <el-table-column prop="deadTime" label="Latest Return Time" />
+    <el-table-column label="Overdue Days">
+      <template v-slot="scope">
+        <span style="color: red">{{overdueDays(scope.row.deadTime)}}</span>
+      </template>
+    </el-table-column>
     <el-table-column fixed="right" label="Operation" v-if="user.role === 1">
       <template v-slot="scope">
         <el-button size="mini" @click="handleEdit(scope.row)">Alter</el-button>
@@ -106,6 +111,11 @@ export default {
       this.form = JSON.parse(JSON.stringify(row))
       this.dialogVisible2 = true
     },
+    overdueDays(deadTime){
+      let timeDiff = new Date().getTime() - new Date(deadTime).getTime();
+      let dayDiff = timeDiff / (1000 * 3600 * 24);
+      return dayDiff>0?Math.ceil(dayDiff):""
+    }
   },
   data() {
     return {

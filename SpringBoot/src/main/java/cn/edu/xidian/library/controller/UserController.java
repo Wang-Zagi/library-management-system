@@ -6,6 +6,7 @@ import cn.edu.xidian.library.entity.BorrowRecord;
 import cn.edu.xidian.library.entity.User;
 import cn.edu.xidian.library.mapper.BorrowRecordMapper;
 import cn.edu.xidian.library.mapper.UserMapper;
+import cn.edu.xidian.library.utils.RegexUtils;
 import cn.edu.xidian.library.utils.TokenUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -88,6 +89,8 @@ public class UserController {
 
     @PutMapping
     public Result<?> update(@RequestBody User user){
+        if(RegexUtils.isPhoneInvalid(user.getPhone()))
+            return Result.error("-1","Invalid phone number.");
         userMapper.updateById(user);
         return Result.success();
     }
