@@ -1,3 +1,12 @@
+<style scoped>
+@media screen {
+  .barcode{
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+</style>
+
 <template>
   <div style="max-width: 800px;margin: 5px auto 15px" v-if="user.role === 0">
     <el-alert center="true" type="warning" :closable="false" show-icon="true" style="font-size: 18px"
@@ -33,20 +42,6 @@
         <el-popconfirm title="Confirm to delete?" @confirm="deleteBatch" v-if="user.role === 1">
           <template #reference>
             <el-button type="danger">Batch delete</el-button>
-          </template>
-        </el-popconfirm>
-      </el-form-item>
-      <el-form-item style="float: right" v-if="numOfOutDataBook!==0">
-        <el-popconfirm
-            confirm-button-text="Look up"
-            cancel-button-text="Cancel"
-            :icon="InfoFilled"
-            icon-color="red"
-            title="Our books are overdue. Please return them as soon as possible."
-            @confirm="toLook"
-        >
-          <template #reference>
-            <el-button  type="warning">Overdue notice</el-button>
           </template>
         </el-popconfirm>
       </el-form-item>
@@ -158,15 +153,34 @@
     <el-dialog v-model="entityDialogVisible" :title="entityMode+'Book'" width="30%">
       <el-form :model="book" label-width="120px">
         <el-form-item label="Book ISBN">
-          <el-input style="width: 80%" v-model="book.isbn"></el-input>
+          <el-input style="width: 80%" v-model="book.isbn" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="Book Barcode">
+        <el-form-item label="Book Barcode" v-if="entityMode==='Edit'">
           <el-input style="width: 80%" v-model="book.barcode"></el-input>
         </el-form-item>
         <el-form-item label="Location">
           <el-input style="width: 80%" v-model="book.location"></el-input>
         </el-form-item>
+        <el-form-item label="Add Number" v-if="entityMode==='Add'">
+          <el-input-number style="width: 120px" v-model="addNum" @change="generateBarcode"></el-input-number>
+        </el-form-item>
       </el-form>
+      <div class="barcode" v-if="entityMode==='Add'&&barcodes.length>0">
+        Auto Generated Barcodes
+      </div>
+      <div class="print-area">
+        <div class="barcode" v-for="barcode in barcodes">
+          <img :src="`https://barcode.tec-it.com/barcode.ashx?data=${barcode}&code=Code11`"/>
+        </div>
+      </div>
+      <div class="barcode" v-if="barcodes.length>0">
+        <a href='https://www.tec-it.com' title='Barcode Software by TEC-IT' target='_blank'>
+          TEC-IT Barcode Generator<br/>
+        </a>
+      </div>
+      <div class="barcode" v-if="barcodes.length>0">
+        <el-button type="success" @click="printBarcode">Pirnt Barcode</el-button>
+      </div>
       <template #footer>
       <span class="dialog-footer">
         <el-button @click="entityDialogVisible = false">Cancel</el-button>
@@ -177,12 +191,12 @@
 
     <el-dialog
         v-model="warnDialogVisible"
-        title="Overdue and Debt"
+        title="Overdue and Fine"
         width="500px"
     >
       <span>
         You have <span :style="overdueNum>0?{color:'red'}:{}">{{overdueNum}}</span> records past the return time,<br/>
-        and have a debt of <span :style="user.debt>0?{color:'red'}:{}">{{user.debt}}</span> dollars.<br/>
+        and have a fine of <span :style="user.debt>0?{color:'red'}:{}">{{user.debt}}</span> dollars.<br/>
         please return books and pay fine off as soon as possible.<br/>
         You cannot borrow any book before that.
       </span>
@@ -218,9 +232,6 @@ export default {
   name: 'Book',
   methods: {
     load(){
-      this.numOfOutDataBook =0;
-      this.outDateBook =[];
-      this.overdueNum=0
       if(this.user.role === 2){
         request.get("/borrowRecord",{
           params:{
@@ -382,15 +393,17 @@ export default {
         })
       }
       else {
-        request.post("/book",this.book).then(res =>{
-          console.log(res)
-          if(res.code == '0'){
-            ElMessage.success('Add successfully')
-            this.load()
-            this.entityDialogVisible = false
-          }
-          else
-            ElMessage.error(res.msg)
+        let requests = this.barcodes.map(barcode=>{
+          this.book.barcode=barcode
+          return request.post("/book",this.book).then(res =>{
+            if(res.code!='0')
+              ElMessage.error(res.msg)
+          })
+        })
+        Promise.all(requests).then(()=>{
+          ElMessage.success('Add successfully')
+          this.entityDialogVisible = false
+          this.load()
         })
       }
     },
@@ -398,12 +411,16 @@ export default {
       this.book ={}
       this.book.isbn=booInfo.isbn
       this.book.status='in library'
+      this.book.location='not on shelf'
+      this.addNum=0
+      this.barcodes=[]
       this.entityDialogVisible= true
       this.entityMode="Add"
     },
     editEntity(row){
-
       this.book = JSON.parse(JSON.stringify(row))
+      this.addNum=0
+      this.barcodes=[]
       this.originBarcode = row.barcode
       this.entityDialogVisible = true
       this.entityMode="Edit"
@@ -421,15 +438,29 @@ export default {
     handleSelectionChange(val){
       this.ids = val.map(v =>v.isbn)
     },
-    toLook(){
-      this.warnDialogVisible =true;
+    generateBarcode(){
+      request.get("book/barcode/max" ).then(res =>{
+        console.log(res)
+        if(res.code != '0' ){
+          ElMessage.error(res.msg)
+          return
+        }
+        let start=Number(res.data)
+        this.barcodes=[]
+        for(let i=1;i<=this.addNum;i++){
+          this.barcodes.push(String(start+i).padStart(8,'0'))
+        }
+      })
     },
+    printBarcode(){
+      window.print();
+    }
   },
   data() {
     return {
       bookInfoList:[],
       bookInfo: {},
-      book: {},
+      book:{},
       isbn:null,
       name:null,
       author:null,
@@ -449,6 +480,8 @@ export default {
       originIsbn:null,
       entityMode: 'Add',
       originBarcode:null,
+      addNum:0,
+      barcodes:[],
     }
   },
 }

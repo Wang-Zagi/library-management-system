@@ -68,4 +68,8 @@ public class BookController {
         bookMapper.deleteBatchIds(ids);
         return Result.success();
     }
+    @GetMapping("/barcode/max")
+    public Result<?> getMaxBarcode(){
+        return Result.success(bookMapper.getMaxBarcode());
+    }
 }

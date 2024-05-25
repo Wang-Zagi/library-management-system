@@ -19,7 +19,7 @@
         <el-form-item label="Phone">
           <el-input style="width: 40%" v-model="user.phone"></el-input>
         </el-form-item>
-        <el-form-item label="Debt">
+        <el-form-item label="Fine">
           <span :style="user.debt>0?{color:'red'}:{}" v-text="'$'+this.user.debt"></span>
           <span>
             <el-button type="danger" @click="payDebt" :disabled="user.debt==0" style="margin-left: 20px">Pay</el-button>
@@ -71,7 +71,7 @@ export default {
     },
     payDebt() {
       this.$confirm(
-          'Are you sure to pay the debt?',
+          'Are you sure to pay the fine?',
           'Warning',
           {
             confirmButtonText: 'OK',
