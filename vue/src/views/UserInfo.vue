@@ -61,7 +61,6 @@ export default {
         console.log(res)
         if (res.code == '0') {
           ElMessage.success("Update successful")
-          console.log(this.user)
           // Trigger Layout to update user information
           this.$emit("userInfoChange")
         } else {
@@ -70,32 +69,9 @@ export default {
       })
     },
     payDebt() {
-      this.$confirm(
-          'Are you sure to pay the fine?',
-          'Warning',
-          {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            type: 'warning',
-          }
-      )
-          .then(()=> {
-            console.log("pay debt")
-            this.user.debt = 0
-            const userJson = JSON.stringify(this.user)
-            sessionStorage.setItem("user", userJson)
-            request.put("/user", this.user).then(res => {
-              console.log(res)
-              if (res.code == '0') {
-                ElMessage.success("Pay successful")
-                console.log(this.user)
-                // Trigger Layout to update user information
-                this.$emit("userInfoChange")
-              } else {
-                ElMessage.error(res.msg)
-              }
-            })
-          })
+      window.open("http://127.0.0.1:8080/alipay/pay?subject=Fine" +
+          "&traceNo="+this.user.id+"-"+moment().format('YYYY-MM-DD-HH-mm-ss')+
+          "&totalAmount="+this.user.debt,'_self')
     }
   }
 }
