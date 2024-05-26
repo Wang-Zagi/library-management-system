@@ -26,6 +26,7 @@ import request from "../utils/request";
 import router from "@/router";
 
 export default {
+  props:["user"],
   data() {
     return {
       cards: [
@@ -35,13 +36,6 @@ export default {
         { title: 'Number of users', data: 1000, icon: '#iconpopulation' }
       ],
       data:{}
-    }
-  },
-  created() {
-    let userJson = sessionStorage.getItem("user")
-    if(!userJson)
-    {
-      router.push("/login")
     }
   },
   mounted() {

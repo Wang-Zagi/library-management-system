@@ -7,8 +7,8 @@
    </div>
    <div style="flex: 1"></div>
    <div style="width: 100px">
-     <el-button type="primary" round @click="$router.push('/login')" v-if="user===null">Login >></el-button>
-     <el-dropdown  v-if="user!==null">
+     <el-button type="primary" round @click="$router.push('/login')" v-if="user.role===0">Login >></el-button>
+     <el-dropdown v-if="user.role!==0">
       <span class="el-dropdown-link">
         {{user.username}} <el-icon class="el-icon--right">
           <arrow-down />
@@ -32,25 +32,16 @@ export default {
   props: ['user'],
   data(){
     return{
-      user: null,
       imgUrl:require("../assets/icon/login.png")
     }
-  },
-  created(){
-    this.loadUserInfo()
   },
   methods:{
     exit(){
       sessionStorage.removeItem("user")
       this.$router.push("/login")
       ElMessage.success("Exit system successfully")
-    },
-    loadUserInfo(){
-      let userStr = sessionStorage.getItem("user")
-      if(userStr) this.user = JSON.parse(userStr)
     }
   }
-
 }
 </script>
 

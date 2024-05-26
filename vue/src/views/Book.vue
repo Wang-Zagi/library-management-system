@@ -213,23 +213,13 @@
 <script>
 import request from "../utils/request";
 import {ElMessage, ElMessageBox} from "element-plus";
-import moment from "moment";
-import router from "@/router";
-import {InfoFilled} from "@element-plus/icons";
 import qs from "qs";
 export default {
-  computed: {
-    InfoFilled() {
-      return InfoFilled
-    }
-  },
-  created(){
-    let userJson = sessionStorage.getItem("user")
-    if(userJson)
-      this.user = JSON.parse(userJson)
-    this.load()
-  },
+  props:["user","loaded"],
   name: 'Book',
+  created(){
+    this.loaded.then(()=>this.load())
+  },
   methods: {
     load(){
       if(this.user.role === 2){
@@ -467,7 +457,6 @@ export default {
       total:10,
       pageNum:1,
       pageSize: 10,
-      user:{role:0},
       overdueNum:0,
       records:[],
       outDateBook:[],

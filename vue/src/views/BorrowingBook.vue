@@ -59,16 +59,11 @@ import {ElMessage} from "element-plus";
 import moment from "moment";
 import router from "@/router";
 export default {
+  props:["user"],
+  name: 'borrowingBook',
   created(){
-    let userJson = sessionStorage.getItem("user")
-    if(!userJson) {
-      router.push("/login")
-      return
-    }
-    this.user = JSON.parse(userJson)
     this.load()
   },
-  name: 'borrowingBook',
   methods: {
     load(){
       request.get("/borrowRecord",{
@@ -126,7 +121,6 @@ export default {
       currentPage:1,
       pageSize: 10,
       recordList: [],
-      user:{},
       dialogVisible: false,
       dialogVisible2: false,
     }

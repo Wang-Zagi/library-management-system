@@ -88,19 +88,9 @@ import {ElMessage, ElMessageBox} from "element-plus";
 
 export default {
   name: "Aside",
-  components:{},
+  props:["user","loaded"],
   created(){
-    let userStr = sessionStorage.getItem("user")
-    if(userStr) {
-      this.user = JSON.parse(userStr)
-      request.post("user/login", this.user).then(res => {
-        if (res.code == '0') {
-          console.log(res.data)
-          this.user=res.data
-          sessionStorage.setItem("user",JSON.stringify(this.user))//缓存用户信息
-        } else
-          ElMessage.error(res.msg)
-      })
+    this.loaded.then(()=>{
       if(this.user.role === 2){
         request.get("/borrowRecord",{
           params:{
@@ -117,13 +107,10 @@ export default {
               .reduce((s, i) => s + i, 0)
         })
       }
-    }
+    })
   },
   data(){
     return {
-      user:{
-        role:0
-      },
       overdueNum:0
     }
   }

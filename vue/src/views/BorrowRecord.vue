@@ -92,17 +92,11 @@ import moment from "moment/moment";
 import qs from "qs";
 
 export default defineComponent({
-
+  props:["user"],
+  name: 'borrowRecord',
   created(){
-    let userJson = sessionStorage.getItem("user")
-    if(!userJson) {
-      router.push("/login")
-      return
-    }
-    this.user = JSON.parse(userJson)
     this.load()
   },
-  name: 'borrowRecord',
   methods: {
     load(){
       request.get("/borrowRecord",{
@@ -190,39 +184,6 @@ export default defineComponent({
       this.dialogVisible = true
     },
   },
-
-  setup() {
-    const state = reactive({
-      shortcuts: [
-        {
-          text: 'Today',
-          value: new Date(),
-        },
-        {
-          text: 'Yesterday',
-          value: () => {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24)
-            return date
-          },
-        },
-        {
-          text: 'A week ago',
-          value: () => {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-            return date
-          },
-        },
-      ],
-      value1: '',
-      value2: '',
-      value3: '',
-      defaultTime: new Date(2000, 1, 1, 12, 0, 0), // '12:00:00'
-    })
-
-    return toRefs(state)
-  },
   data() {
     return {
       bookBarcode:null,
@@ -232,7 +193,6 @@ export default defineComponent({
       currentPage:1,
       pageSize: 10,
       recordList: [],
-      user:{},
       ids:[],
       dialogVisible : false,
     }

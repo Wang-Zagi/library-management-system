@@ -30,11 +30,11 @@ import {ElMessage} from "element-plus";
 import moment from "moment/moment";
 import request from "@/utils/request";
 export default {
+  props:["user"],
   data() {
     return{
       recordList:[],
-      barcode:null,
-      user:{},
+      barcode:null
     }
   },
   methods: {
@@ -93,11 +93,6 @@ export default {
         this.getBorrowingTotal()
       }
     },
-  },
-  created(){
-    let userJson = sessionStorage.getItem("user")
-    if(userJson)
-      this.user = JSON.parse(userJson)
   },
   mounted() {
     this.$refs.barcodeInput.input.focus()

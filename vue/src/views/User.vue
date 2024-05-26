@@ -103,15 +103,7 @@ import router from "@/router";
 import qs from "qs";
 
 export default {
-  created(){
-    let userJson = sessionStorage.getItem("user")
-    if(!userJson) {
-      router.push("/login")
-      return
-    }
-    this.user = JSON.parse(userJson)
-    this.load()
-  },
+  props:["user"],
   name: 'User',
   methods: {
     load(){
@@ -200,7 +192,6 @@ export default {
       total:10,
       currentPage:1,
       pageSize: 10,
-      user:{},
       ids:[],
       dialogVisible : false,
     }

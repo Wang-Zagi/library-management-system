@@ -39,8 +39,8 @@ import router from "@/router";
 
 export default {
   name: "Password",
+  props:["user","loaded"],
   data() {
-
     const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please enter a new password.'))
@@ -65,8 +65,6 @@ export default {
         checkpassword: '',
       },
       form2:{
-        password:'',
-        id:0
       },
       rules: {
         password: [{ validator: validatePass, trigger: 'blur' ,required: true}],
@@ -75,12 +73,10 @@ export default {
     }
   },
   created() {
-    let userJson = sessionStorage.getItem("user")
-    if(!userJson) {
-      router.push("/login")
-      return
-    }
-    this.form2.id = JSON.parse(userJson).id
+    this.loaded.then(()=>{
+      this.form2=JSON.parse(JSON.stringify(this.user))
+      this.form2.password=""
+    })
   },
   methods: {
 
