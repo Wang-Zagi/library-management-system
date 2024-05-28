@@ -47,6 +47,11 @@
     <el-table-column prop="username" label="Username" min-width="10"/>
     <el-table-column prop="sex" label="Gender" min-width="5"/>
     <el-table-column prop="phone" label="Phone Number" min-width="10"/>
+    <el-table-column prop="debt" label="Fine number" min-width="10">
+      <template v-slot="scope">
+        <span :style="scope.row.debt>0?{color:'red'}:{}" v-text="'$'+scope.row.debt"></span>
+      </template>
+    </el-table-column>
     <el-table-column fixed="right" label="Operation" min-width="10">
       <template v-slot="scope">
         <el-button size="mini" @click="handleEdit(scope.row)">Edit</el-button>
@@ -105,6 +110,9 @@ import qs from "qs";
 export default {
   props:["user"],
   name: 'User',
+  created() {
+    this.load()
+  },
   methods: {
     load(){
       request.get("/user",{

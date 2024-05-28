@@ -179,7 +179,7 @@
         </a>
       </div>
       <div class="barcode" v-if="barcodes.length>0">
-        <el-button type="success" @click="printBarcode">Pirnt Barcode</el-button>
+        <el-button type="success" @click="printBarcode">Print Barcode</el-button>
       </div>
       <template #footer>
       <span class="dialog-footer">
