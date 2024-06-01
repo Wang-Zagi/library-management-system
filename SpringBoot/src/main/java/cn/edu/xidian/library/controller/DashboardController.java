@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,6 +42,22 @@ public class DashboardController {
         map.put("borrowRecordCount", borrowRecordCount);
         map.put("bookCount", bookCount);
         return Result.success(map);
+    }
+    @GetMapping("/borrowRecord")
+    public Result<?> borrowRecord(){
+        // 统计每天的借阅数量
+        List<BorrowRecord> records = borrowRecordMapper.selectList(null);
+        // 统计每天的借阅数量
+        Map<String, Integer> borrowRecordMap = new HashMap<>();
+        for (BorrowRecord record : records) {
+            String date = record.getBorrowTime().toString().substring(0, 10);
+            if (borrowRecordMap.containsKey(date)) {
+                borrowRecordMap.put(date, borrowRecordMap.get(date) + 1);
+            } else {
+                borrowRecordMap.put(date, 1);
+            }
+        }
+        return Result.success(borrowRecordMap);
     }
 
 
