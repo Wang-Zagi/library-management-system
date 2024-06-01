@@ -2,9 +2,9 @@ package cn.edu.xidian.library.controller;
 
 import cn.edu.xidian.library.commom.AlipayConfig;
 import cn.edu.xidian.library.entity.AlipayOrder;
+import cn.edu.xidian.library.mapper.IncomeMapper;
 import cn.edu.xidian.library.mapper.UserMapper;
 import com.alipay.easysdk.factory.Factory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +19,8 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +34,9 @@ public class AlipayController {
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    IncomeMapper incomeMapper;
 
     private static final String GATEWAY_URL ="https://openapi-sandbox.dl.alipaydev.com/gateway.do";
     private static final String FORMAT ="JSON";
@@ -64,6 +69,7 @@ public class AlipayController {
     }
 
     @PostMapping("/notify")  // 注意这里必须是POST接口
+    @Transactional
     public String payNotify(HttpServletRequest request) throws Exception {
         if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
             System.out.println("=========支付宝异步回调========");
@@ -90,6 +96,8 @@ public class AlipayController {
 
                 String tradeNo = params.get("out_trade_no");
                 Integer userId = Integer.parseInt(tradeNo.split("-")[0]);
+                double amount=Double.parseDouble(params.get("total_amount"));
+                incomeMapper.insert(tradeNo,userId,(int)amount,params.get("gmt_payment"));
                 userMapper.clearFine(userId);
             }
         }
