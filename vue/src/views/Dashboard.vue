@@ -30,10 +30,10 @@ export default {
   data() {
     return {
       cards: [
+        { title: 'Books in library', data: 100, icon: '#iconbook-pro' },
+        { title: 'Number of users', data: 1000, icon: '#iconpopulation' },
         { title: 'Total borrowing', data: 100, icon: '#iconlend-record-pro' },
-        { title: 'Total visits', data: 100, icon: '#iconvisit'   },
-        { title: 'Number of books', data: 100, icon: '#iconbook-pro' },
-        { title: 'Number of users', data: 1000, icon: '#iconpopulation' }
+        { title: 'Revenue', data: 100, icon: '#iconvisit'   },
       ],
       data:{}
     }
@@ -44,12 +44,10 @@ export default {
     request.get("/dashboard").then(res=>{
       if(res.code == '0')
       {
-
-        this.cards[0].data = res.data.borrowRecordCount
-        this.cards[1].data = res.data.visitCount
-        this.cards[2].data = res.data.bookCount
-        this.cards[3].data = res.data.userCount
-
+        this.cards[0].data = res.data.bookCount
+        this.cards[1].data = res.data.userCount
+        this.cards[2].data = res.data.borrowRecordCount
+        this.cards[3].data = res.data.revenue
       }
       else
       {

@@ -28,7 +28,7 @@ public class DashboardController {
     private BookMapper bookMapper;
     @GetMapping
     public Result<?> dashboardrecords(){
-        int visitCount = LoginUser.getVisitCount();
+        int revenue = userMapper.selectDebt();
         QueryWrapper<User> queryWrapper1=new QueryWrapper<>();
         int userCount = Math.toIntExact(userMapper.selectCount(queryWrapper1));
         QueryWrapper<BorrowRecord> queryWrapper2=new QueryWrapper<BorrowRecord>();
@@ -36,7 +36,7 @@ public class DashboardController {
         QueryWrapper<Book> queryWrapper3= new QueryWrapper<>();
         int bookCount = Math.toIntExact(bookMapper.selectCount(queryWrapper3));
         Map<String, Object> map = new HashMap<>();//键值对形式
-        map.put("visitCount", visitCount);//放置visitCount到map中
+        map.put("revenue", revenue);//放置visitCount到map中
         map.put("userCount", userCount);
         map.put("borrowRecordCount", borrowRecordCount);
         map.put("bookCount", bookCount);
