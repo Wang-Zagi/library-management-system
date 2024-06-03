@@ -4,9 +4,11 @@ import cn.edu.xidian.library.LoginUser;
 import cn.edu.xidian.library.commom.Result;
 import cn.edu.xidian.library.entity.Book;
 import cn.edu.xidian.library.entity.BorrowRecord;
+import cn.edu.xidian.library.entity.IncomeRecord;
 import cn.edu.xidian.library.entity.User;
 import cn.edu.xidian.library.mapper.BookMapper;
 import cn.edu.xidian.library.mapper.BorrowRecordMapper;
+import cn.edu.xidian.library.mapper.IncomeMapper;
 import cn.edu.xidian.library.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,8 @@ public class DashboardController {
     private BorrowRecordMapper borrowRecordMapper;
     @Resource
     private BookMapper bookMapper;
+    @Resource
+    private IncomeMapper incomeMapper;
     @GetMapping
     public Result<?> dashboardrecords(){
         int revenue = userMapper.selectDebt();
@@ -59,7 +63,20 @@ public class DashboardController {
         }
         return Result.success(borrowRecordMap);
     }
-
+    @GetMapping("/revenue")
+    public Result<?> debtRecord() {
+        List<IncomeRecord> records = incomeMapper.selectList(null);
+        Map<String, Integer> debtRecordMap = new HashMap<>();
+        for (IncomeRecord record : records) {
+            String date = record.getPayTime().toString();
+            if (debtRecordMap.containsKey(date)) {
+                debtRecordMap.put(date, debtRecordMap.get(date) + record.getAmount());
+            } else {
+                debtRecordMap.put(date, record.getAmount());
+            }
+        }
+        return Result.success(debtRecordMap);
+    }
 
 
 }

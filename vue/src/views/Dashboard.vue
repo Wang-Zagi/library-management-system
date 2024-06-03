@@ -17,9 +17,13 @@
     <!-- Prepare a DOM element with a size (width and height) for ECharts -->
     <div class="chart-container">
       <div id="chart1" class="chart"></div>
-      <button @click="switchBorrowData('day')">按日统计</button>
-      <button @click="switchBorrowData('week')">按周统计</button>
-      <button @click="switchBorrowData('month')">按月统计</button>
+      <button @click="switchBorrowData('day')">by day</button>
+      <button @click="switchBorrowData('week')">by week</button>
+      <button @click="switchBorrowData('month')">by month</button>
+      <div id="chart2" class="chart"></div>
+      <button @click="switchRevenue('day')">by day</button>
+      <button @click="switchRevenue('week')">by week</button>
+      <button @click="switchRevenue('month')">by month</button>
     </div>
   </div>
 </template>
@@ -66,39 +70,16 @@ export default {
     request.get("/dashboard/borrowRecord").then((res) => {
       console.log(res);
       this.borrowData = res.data;
-      const responseData = res.data;
-      const dates = Object.keys(responseData);
-      const values = Object.values(responseData);
-      console.log(dates);
-      console.log(values);
 
-      var option = {
-        title: {
-          text: "Borrow Record",
-        },
-        tooltip: {},
-        xAxis: {
-          type: "category",
-          data: dates,
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            name: "Borrow Count",
-            type: "bar",
-            data: values,
-          },
-        ],
-      };
-
-      var borrowRecordChart = echarts.init(document.getElementById("chart1"));
-      borrowRecordChart.setOption(option);
-      console.log("Borrow Record Chart Element: ", borrowRecordChart); // Add this line for debug
+      this.switchBorrowData("day");
     });
 
-    console.log("End of mounted hook"); // Add this line for debug
+    request.get("/dashboard/revenue").then((res) => {
+      console.log(res);
+      this.revenueData = res.data;
+
+      this.switchRevenue("day");
+    });
   },
 
   methods: {
@@ -221,6 +202,116 @@ export default {
       };
 
       var borrowRecordChart = echarts.init(document.getElementById("chart1"));
+      borrowRecordChart.setOption(options);
+    },
+    switchRevenue(type) {
+      var today = new Date();
+      today.setHours(0, 0, 0, 0); // 设置时间为当天的开始
+      var oneDayMillis = 24 * 60 * 60 * 1000;
+      var oneWeekMillis = 7 * oneDayMillis;
+
+      var filteredByDate = {};
+      var filteredByWeek = {};
+      var filteredByMonth = {};
+
+      // 解析this.borrowData并填充filteredByDate, filteredByWeek, filteredByMonth
+      for (var dateStr in this.revenueData) {
+        var borrowDate = new Date(dateStr);
+        if (!isNaN(borrowDate)) {
+          var dateKey = borrowDate.toISOString().split("T")[0];
+          if (!filteredByDate[dateKey]) filteredByDate[dateKey] = 0;
+          filteredByDate[dateKey] += this.revenueData[dateStr];
+        }
+      }
+
+      var startDate = new Date(today.getTime() - 6 * oneDayMillis);
+      for (
+        var d = new Date(startDate);
+        d <= today;
+        d.setDate(d.getDate() + 1)
+      ) {
+        var dateString = d.toISOString().split("T")[0];
+        filteredByDate[dateString] = filteredByDate[dateString] || 0;
+      }
+
+      var startWeekDate = new Date(today.getTime() - 3 * oneWeekMillis);
+      for (
+        var wd = new Date(startWeekDate);
+        wd <= today;
+        wd.setDate(wd.getDate() + 7)
+      ) {
+        var weekString = `${wd.getFullYear()}-W${this.getWeekNumber(wd)}`;
+        filteredByWeek[weekString] = 0;
+      }
+      for (var date in filteredByDate) {
+        var borrowDate = new Date(date);
+        if (borrowDate >= startWeekDate && borrowDate <= today) {
+          var weekString = `${borrowDate.getFullYear()}-W${this.getWeekNumber(
+            borrowDate
+          )}`;
+          filteredByWeek[weekString] += filteredByDate[date];
+        }
+      }
+
+      var startMonthDate = new Date(today);
+      startMonthDate.setMonth(startMonthDate.getMonth() - 2);
+      startMonthDate.setDate(1);
+      for (
+        var md = new Date(startMonthDate);
+        md <= today;
+        md.setMonth(md.getMonth() + 1)
+      ) {
+        var monthString = `${md.getFullYear()}-${md.getMonth() + 1}`;
+        filteredByMonth[monthString] = 0;
+      }
+      for (var date in filteredByDate) {
+        var borrowDate = new Date(date);
+        if (borrowDate >= startMonthDate && borrowDate <= today) {
+          var monthString = `${borrowDate.getFullYear()}-${
+            borrowDate.getMonth() + 1
+          }`;
+          filteredByMonth[monthString] += filteredByDate[date];
+        }
+      }
+
+      var dates, values;
+      switch (type) {
+        case "day":
+          dates = Object.keys(filteredByDate).reverse();
+          values = Object.values(filteredByDate).reverse();
+          break;
+        case "week":
+          dates = Object.keys(filteredByWeek).reverse();
+          values = Object.values(filteredByWeek).reverse();
+          break;
+        case "month":
+          dates = Object.keys(filteredByMonth).reverse();
+          values = Object.values(filteredByMonth).reverse();
+          break;
+      }
+
+      var options = {
+        title: {
+          text: "Borrow Record",
+        },
+        tooltip: {},
+        xAxis: {
+          type: "category",
+          data: dates,
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            name: "Borrow Count",
+            type: "bar",
+            data: values,
+          },
+        ],
+      };
+
+      var borrowRecordChart = echarts.init(document.getElementById("chart2"));
       borrowRecordChart.setOption(options);
     },
     getWeekNumber(d) {
