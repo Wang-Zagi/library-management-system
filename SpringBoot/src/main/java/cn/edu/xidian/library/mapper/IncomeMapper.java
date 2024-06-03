@@ -13,4 +13,6 @@ public interface IncomeMapper {
     void insert(String id, Integer payerId, Integer amount, String payTime);
     @Select("select amount, pay_time from income_record")
     List<IncomeRecord> selectList(Object o);
+    @Select("select sum(amount) from income_record")
+    Integer getTotal();
 }

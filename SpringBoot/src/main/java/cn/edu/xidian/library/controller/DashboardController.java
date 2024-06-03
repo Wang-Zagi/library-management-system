@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +32,10 @@ public class DashboardController {
     private BookMapper bookMapper;
     @Resource
     private IncomeMapper incomeMapper;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @GetMapping
     public Result<?> dashboardrecords(){
-        int revenue = userMapper.selectDebt();
+        int revenue = incomeMapper.getTotal();
         QueryWrapper<User> queryWrapper1=new QueryWrapper<>();
         int userCount = Math.toIntExact(userMapper.selectCount(queryWrapper1));
         QueryWrapper<BorrowRecord> queryWrapper2=new QueryWrapper<BorrowRecord>();
@@ -54,7 +56,7 @@ public class DashboardController {
         // 统计每天的借阅数量
         Map<String, Integer> borrowRecordMap = new HashMap<>();
         for (BorrowRecord record : records) {
-            String date = record.getBorrowTime().toString();
+            String date = dateFormat.format(record.getBorrowTime());
             if (borrowRecordMap.containsKey(date)) {
                 borrowRecordMap.put(date, borrowRecordMap.get(date) + 1);
             } else {
@@ -63,12 +65,12 @@ public class DashboardController {
         }
         return Result.success(borrowRecordMap);
     }
-    @GetMapping("/revenue")
-    public Result<?> debtRecord() {
+    @GetMapping("/income")
+    public Result<?> incomeRecord() {
         List<IncomeRecord> records = incomeMapper.selectList(null);
         Map<String, Integer> debtRecordMap = new HashMap<>();
         for (IncomeRecord record : records) {
-            String date = record.getPayTime().toString();
+            String date = dateFormat.format(record.getPayTime());
             if (debtRecordMap.containsKey(date)) {
                 debtRecordMap.put(date, debtRecordMap.get(date) + record.getAmount());
             } else {

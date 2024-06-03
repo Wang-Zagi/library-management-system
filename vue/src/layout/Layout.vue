@@ -5,7 +5,7 @@
     <!--      侧边栏-->
     <Aside :user="user" :loaded="load.promise"/>
     <!--      内容区域-->
-    <el-main >
+    <el-main style="padding-bottom: 0px">
       <router-view :user="user" :loaded="load.promise" v-on:userInfoChange="handleInfoChange" style="flex:1"/>
     </el-main>
   </div>
