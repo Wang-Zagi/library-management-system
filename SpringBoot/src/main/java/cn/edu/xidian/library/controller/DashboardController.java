@@ -50,7 +50,7 @@ public class DashboardController {
         // 统计每天的借阅数量
         Map<String, Integer> borrowRecordMap = new HashMap<>();
         for (BorrowRecord record : records) {
-            String date = record.getBorrowTime().toString().substring(0, 10);
+            String date = record.getBorrowTime().toString();
             if (borrowRecordMap.containsKey(date)) {
                 borrowRecordMap.put(date, borrowRecordMap.get(date) + 1);
             } else {

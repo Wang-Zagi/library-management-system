@@ -114,82 +114,91 @@ export default {
       document.getElementById("myTimer").innerHTML = t;
     },
     switchBorrowData(type) {
-      // console.log("Switch borrow data to: ", type);
-      // 创建三个对象分别存储按月份、星期几和具体日期的数据
-      var aggregatedByMonth = {
-        Jan: 0,
-        Feb: 0,
-        Mar: 0,
-        Apr: 0,
-        May: 0,
-        Jun: 0,
-        Jul: 0,
-        Aug: 0,
-        Sep: 0,
-        Oct: 0,
-        Nov: 0,
-        Dec: 0,
-      };
-      var aggregatedByDayOfWeek = {
-        Sun: 0,
-        Mon: 0,
-        Tue: 0,
-        Wed: 0,
-        Thu: 0,
-        Fri: 0,
-        Sat: 0,
-      };
-      var aggregatedByDate = {};
-      var months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      var daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-      // console.log(this.borrowData);
-      // 遍历原始数据
-      var data = this.borrowData;
-      for (var dateStr in data) {
-        var date = new Date(dateStr); // 解析日期字符串为 Date 对象
-        var month = date.getMonth(); // 获取月份
-        var dayOfWeek = date.getDay(); // 获取周几
+      var today = new Date();
+      today.setHours(0, 0, 0, 0); // 设置时间为当天的开始
+      var oneDayMillis = 24 * 60 * 60 * 1000;
+      var oneWeekMillis = 7 * oneDayMillis;
 
-        // 按月份聚合
-        aggregatedByMonth[months[month]] += data[dateStr];
+      var filteredByDate = {};
+      var filteredByWeek = {};
+      var filteredByMonth = {};
 
-        aggregatedByDayOfWeek[daysOfWeek[dayOfWeek]] += data[dateStr];
-
-        // 按具体日期聚合
-        if (!aggregatedByDate[dateStr]) {
-          aggregatedByDate[dateStr] = 0;
+      // 解析this.borrowData并填充filteredByDate, filteredByWeek, filteredByMonth
+      for (var dateStr in this.borrowData) {
+        var borrowDate = new Date(dateStr);
+        if (!isNaN(borrowDate)) {
+          var dateKey = borrowDate.toISOString().split("T")[0];
+          if (!filteredByDate[dateKey]) filteredByDate[dateKey] = 0;
+          filteredByDate[dateKey] += this.borrowData[dateStr];
         }
-        aggregatedByDate[dateStr] += data[dateStr];
       }
-      var dates;
-      var values;
+
+      var startDate = new Date(today.getTime() - 6 * oneDayMillis);
+      for (
+        var d = new Date(startDate);
+        d <= today;
+        d.setDate(d.getDate() + 1)
+      ) {
+        var dateString = d.toISOString().split("T")[0];
+        filteredByDate[dateString] = filteredByDate[dateString] || 0;
+      }
+
+      var startWeekDate = new Date(today.getTime() - 3 * oneWeekMillis);
+      for (
+        var wd = new Date(startWeekDate);
+        wd <= today;
+        wd.setDate(wd.getDate() + 7)
+      ) {
+        var weekString = `${wd.getFullYear()}-W${this.getWeekNumber(wd)}`;
+        filteredByWeek[weekString] = 0;
+      }
+      for (var date in filteredByDate) {
+        var borrowDate = new Date(date);
+        if (borrowDate >= startWeekDate && borrowDate <= today) {
+          var weekString = `${borrowDate.getFullYear()}-W${this.getWeekNumber(
+            borrowDate
+          )}`;
+          filteredByWeek[weekString] += filteredByDate[date];
+        }
+      }
+
+      var startMonthDate = new Date(today);
+      startMonthDate.setMonth(startMonthDate.getMonth() - 2);
+      startMonthDate.setDate(1);
+      for (
+        var md = new Date(startMonthDate);
+        md <= today;
+        md.setMonth(md.getMonth() + 1)
+      ) {
+        var monthString = `${md.getFullYear()}-${md.getMonth() + 1}`;
+        filteredByMonth[monthString] = 0;
+      }
+      for (var date in filteredByDate) {
+        var borrowDate = new Date(date);
+        if (borrowDate >= startMonthDate && borrowDate <= today) {
+          var monthString = `${borrowDate.getFullYear()}-${
+            borrowDate.getMonth() + 1
+          }`;
+          filteredByMonth[monthString] += filteredByDate[date];
+        }
+      }
+
+      var dates, values;
       switch (type) {
         case "day":
-          dates = Object.keys(aggregatedByDate);
-          values = Object.values(aggregatedByDate);
+          dates = Object.keys(filteredByDate).reverse();
+          values = Object.values(filteredByDate).reverse();
           break;
         case "week":
-          dates = Object.keys(aggregatedByDayOfWeek);
-          values = Object.values(aggregatedByDayOfWeek);
+          dates = Object.keys(filteredByWeek).reverse();
+          values = Object.values(filteredByWeek).reverse();
           break;
         case "month":
-          dates = Object.keys(aggregatedByMonth);
-          values = Object.values(aggregatedByMonth);
+          dates = Object.keys(filteredByMonth).reverse();
+          values = Object.values(filteredByMonth).reverse();
           break;
       }
+
       var options = {
         title: {
           text: "Borrow Record",
@@ -210,8 +219,16 @@ export default {
           },
         ],
       };
+
       var borrowRecordChart = echarts.init(document.getElementById("chart1"));
       borrowRecordChart.setOption(options);
+    },
+    getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+      var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+      return weekNo;
     },
   },
 };
