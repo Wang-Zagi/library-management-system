@@ -28,7 +28,7 @@
         <el-radio v-model="form.role" label="1">admin</el-radio>
       </el-form-item>
       <el-form-item prop="authorize" v-if="form.role==1">
-        <el-input v-model="form.authorize" placeholder="Please enter the administrator registration code." clearable show-password>
+        <el-input v-model="form.authorize" placeholder="Administrator registration code." clearable show-password>
           <template #prefix>
             <el-icon class="el-input__icon"><Lock /></el-icon>
           </template>

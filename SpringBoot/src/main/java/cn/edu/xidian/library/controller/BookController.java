@@ -34,7 +34,7 @@ public class BookController {
     @PostMapping
     public Result<?> add(@RequestBody Book book){
         if (bookMapper.selectById(book.getBarcode()) != null)
-            return Result.error("-1","Add failed. This Barcode is already in data base.");
+            return Result.error("-1","Add failed. This Barcode has already been used.");
         bookMapper.insert(book);
         return Result.success();
     }
@@ -43,7 +43,7 @@ public class BookController {
     public Result<?> update(@PathVariable String barcode,@RequestBody Book book){
         if(!barcode.equals(book.getBarcode())){
             if (bookMapper.selectById(book.getBarcode()) != null)
-                return Result.error("-1","Edit failed. This Barcode is already in data base.");
+                return Result.error("-1","Edit failed. This Barcode has already been used.");
             bookMapper.deleteById(barcode);
             bookMapper.insert(book);
         }

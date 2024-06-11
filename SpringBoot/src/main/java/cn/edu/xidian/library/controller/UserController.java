@@ -99,9 +99,9 @@ public class UserController {
     public Result<?> delete(@PathVariable Long id){
         LambdaQueryWrapper<BorrowRecord> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(BorrowRecord::getBorrowerId,id)
-                .eq(BorrowRecord::getStatus,"borrowed");
+                .eq(BorrowRecord::getStatus,"borrowing");
         if (borrowRecordMapper.selectOne(wrapper) != null)
-            return Result.error("-1","The user has books borrowed and cannot be deleted.");
+            return Result.error("-1","Delete Failed.The user has books not returned");
         userMapper.deleteById(id);
         return Result.success();
     }
@@ -112,9 +112,9 @@ public class UserController {
         for (Integer id:ids){
             LambdaQueryWrapper<BorrowRecord> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(BorrowRecord::getBorrowerId,id)
-                    .eq(BorrowRecord::getStatus,"borrowed");
+                    .eq(BorrowRecord::getStatus,"borrowing");
             if (borrowRecordMapper.selectOne(wrapper) != null)
-                return Result.error("-1","The user has books borrowed and cannot be deleted.");
+                return Result.error("-1","Delete Failed.The user has books not returned");
         }
         userMapper.deleteBatchIds(ids);
         return Result.success();

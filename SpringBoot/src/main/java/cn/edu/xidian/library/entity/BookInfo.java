@@ -20,7 +20,7 @@ public class BookInfo {
     private BigDecimal price;
     private String author;
     private String publisher;
-    @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy.MM-dd")
     private Date publishTime;
     @TableField(exist = false)
     private List<Book> books;
